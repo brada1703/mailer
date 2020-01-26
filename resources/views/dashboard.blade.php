@@ -67,7 +67,7 @@
                                     @foreach($fields as $field)
                                         <td>
                                             @if($fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->count())
-                                                {{ $fieldvalues->where('subscriber_id', 1)->where('field_id', $field->id)->first()->value }}
+                                                {{ $fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->first()->value }}
                                             @endif
                                         </td>
                                     @endforeach
