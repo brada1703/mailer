@@ -19,17 +19,27 @@
                     <div class="col-12">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">Subscribers</a>
+                                <a class="nav-link" href="#!"
+                                    :class="{ 'active' : showTab == 'subscribers' }" @click.prevent="show('subscribers')">
+                                    Subscribers
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Fields</a>
+                                <a class="nav-link" href="#"
+                                    :class="{ 'active' : showTab == 'fields' }" @click.prevent="show('fields')">
+                                    Fields
+                                </a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="container" id="subscribers">
+            <div class="container" id="subscribers" v-if="showTab == 'subscribers'">
                 <div class="row">
+                    <div class="col-12 options mt-3">
+                        <button class="btn btn-sm btn-warning">Add Subscriber</button>
+                        <button class="btn btn-sm btn-outline-primary float-right">Export</button>
+                    </div>
                     <div class="col-12">
                         <table class="table table-striped">
                             <thead>
@@ -49,6 +59,36 @@
                                     <td>{{ $subscriber->first_name }}</td>
                                     <td>{{ $subscriber->last_name }}</td>
                                     <td>{{ $subscriber->state }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="container" id="fields" v-if="showTab == 'fields'">
+                <div class="row">
+                    <div class="col-12 options mt-3">
+                        <button class="btn btn-sm btn-warning">Add Field</button>
+                        <button class="btn btn-sm btn-outline-primary float-right">Export</button>
+                    </div>
+                    <div class="col-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0" scope="col">#</th>
+                                    <th class="border-top-0" scope="col">Title</th>
+                                    <th class="border-top-0" scope="col">Type</th>
+                                    <th class="border-top-0" scope="col">Tag</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($fields as $field)
+                                <tr>
+                                    <th scope="row">{{ $field->id }}</th>
+                                    <td>{{ $field->title }}</td>
+                                    <td>{{ $field->type }}</td>
+                                    <td>{{ $field->title }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
