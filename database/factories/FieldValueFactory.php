@@ -8,6 +8,7 @@ use App\FieldValue;
 use Faker\Generator as Faker;
 
 $factory->define(FieldValue::class, function (Faker $faker) {
+
     return [
         'value'         => $faker->word,
         'field_id'      => Field::all()->random()->id,

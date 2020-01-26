@@ -64,9 +64,11 @@
                                     <td>{{ $subscriber->first_name }}</td>
                                     <td>{{ $subscriber->last_name }}</td>
                                     <td>{{ $subscriber->state }}</td>
-                                    @foreach($fieldvalues->where('subscriber_id', $subscriber->id)->unique('field_id') as $fieldvalue)
+                                    @foreach($fields as $field)
                                         <td>
-                                            {{ $fieldvalue->value }}
+                                            @if($fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->count())
+                                                {{ $fieldvalues->where('subscriber_id', 1)->where('field_id', $field->id)->first()->value }}
+                                            @endif
                                         </td>
                                     @endforeach
                                 </tr>
@@ -106,7 +108,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <script src="{{ mix('js/app.js')}}"></script>
     </body>

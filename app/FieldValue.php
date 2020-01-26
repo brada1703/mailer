@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FieldValue extends Model
 {
     /**
-     * Get the field that owns the value.
+     * Get the field and subscriber that owns the value.
      */
     public function field()
     {
