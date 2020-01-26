@@ -49,6 +49,11 @@
                                     <th class="border-top-0" scope="col">First Name</th>
                                     <th class="border-top-0" scope="col">Last Name</th>
                                     <th class="border-top-0" scope="col">State</th>
+                                    @foreach($fields as $field)
+                                        <th class="border-top-0 text-uppercase" scope="col">
+                                            {{ $field->title }}
+                                        </th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,6 +64,11 @@
                                     <td>{{ $subscriber->first_name }}</td>
                                     <td>{{ $subscriber->last_name }}</td>
                                     <td>{{ $subscriber->state }}</td>
+                                    @foreach($fieldvalues->where('subscriber_id', $subscriber->id)->unique('field_id') as $fieldvalue)
+                                        <td>
+                                            {{ $fieldvalue->value }}
+                                        </td>
+                                    @endforeach
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -88,7 +98,7 @@
                                     <th scope="row">{{ $field->id }}</th>
                                     <td>{{ $field->title }}</td>
                                     <td>{{ $field->type }}</td>
-                                    <td>{{ $field->title }}</td>
+                                    <td>{${{ $field->title }}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
