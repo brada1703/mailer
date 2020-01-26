@@ -1,8 +1,14 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
 
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+
+.title {
+    color: $green;
+    font-weight: 700;
+}
