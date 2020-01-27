@@ -7,25 +7,6 @@ use Illuminate\Http\Request;
 
 class SubscriberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +16,21 @@ class SubscriberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Subscriber::create(
+            request()
+                ->merge([
+                    'created_at' => date('Y-m-d H:i:s'),
+                ])
+                ->validate([
+                    'first_name' => 'required',
+                    'last_name'  => 'required',
+                    'email'      => 'required|email',
+                    'created_at' => 'required',
+                ])
+        );
+
+        // return redirect('/');
+        // return list of subscribers in JSON format to be parsed by the front-end
     }
 
     /**

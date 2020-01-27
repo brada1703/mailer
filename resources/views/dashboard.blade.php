@@ -131,19 +131,19 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="form-group">
-                                            <input type="text" id="first_name" class="form-control" name="first_name" required placeholder="First Name"
+                                            <input type="text" id="first_name" class="form-control" name="first_name" placeholder="First Name"
                                                 :class="{ 'border-danger' : errors.includes('first_name') }">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="form-group">
-                                            <input type="text" id="last_name" class="form-control" name="last_name" required placeholder="Last Name"
+                                            <input type="text" id="last_name" class="form-control" name="last_name" placeholder="Last Name"
                                                 :class="{ 'border-danger' : errors.includes('last_name') }">
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <input type="email" id="email" class="form-control" name="email" required placeholder="Email"
+                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email"
                                                 :class="{ 'border-danger' : errors.includes('email') }">
                                         </div>
                                     </div>

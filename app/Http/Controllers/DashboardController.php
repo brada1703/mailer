@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Field;
 use App\Subscriber;
 use App\FieldValue;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {

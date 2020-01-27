@@ -1,5 +1,6 @@
 window.Vue = require('vue');
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 Vue.config.productionTip = false;
 
@@ -35,13 +36,12 @@ new Vue({
                 .post(action, formData)
                 .then(function(response){
                     console.log("response", response)
+                    self.modal = ''
                 })
                 .catch(function(error) {
                     console.log("error: ", error.response)
                     button.disabled = false
-                })
-                .finally(function () {
-                    self.modal = ''
+                    self.errors = Object.keys(error.response.data.errors)
                 })
         }
     },
