@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
 
     </head>
+    {{-- <body :class="{ 'modal-open' : showModalSubscriber }"> --}}
     <body>
         <div id="app">
             <p class="text-center title mt-4">Mailer Dashboard</p>
@@ -34,11 +35,13 @@
                     </div>
                 </div>
             </div>
-            <div class="container" id="subscribers" v-if="showTab == 'subscribers'">
+            <div class="container" id="subscribers" v-show="showTab == 'subscribers'">
                 <div class="row">
                     <div class="col-12 options mt-3">
-                        <button class="btn btn-sm btn-warning">Add Subscriber</button>
-                        <button class="btn btn-sm btn-outline-primary float-right">Export</button>
+                        <button class="btn btn-sm btn-warning"
+                            @click="showModal('subscribers')">
+                            Add Subscriber
+                        </button>
                     </div>
                     <div class="col-12">
                         <table class="table table-striped">
@@ -78,11 +81,10 @@
                     </div>
                 </div>
             </div>
-            <div class="container" id="fields" v-if="showTab == 'fields'">
+            <div class="container" id="fields" v-show="showTab == 'fields'">
                 <div class="row">
                     <div class="col-12 options mt-3">
                         <button class="btn btn-sm btn-warning">Add Field</button>
-                        <button class="btn btn-sm btn-outline-primary float-right">Export</button>
                     </div>
                     <div class="col-12">
                         <table class="table table-striped">
@@ -107,6 +109,61 @@
                         </table>
                     </div>
                 </div>
+            </div>
+            <div class="modal fade" id="addSubscriber" tabindex="-1" role="dialog"
+                aria-labelledby="addSubscriberTitle" aria-modal="true"
+                :class="{ 'show d-block' : modal == 'subscribers' }"
+                @click="closeModal($event.target)">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addSubscriberTitle">Add New Subscriber</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click.prevent="showModal('')">
+                                    <span aria-hidden="true">
+                                        &times;
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="modal-body container">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" id="first_name" class="form-control" name="first_name" required placeholder="First Name"
+                                                :class="{ 'border-danger' : errors.includes('first_name') }">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" id="last_name" class="form-control" name="last_name" required placeholder="Last Name"
+                                                :class="{ 'border-danger' : errors.includes('last_name') }">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="email" id="email" class="form-control" name="email" required placeholder="Email"
+                                                :class="{ 'border-danger' : errors.includes('email') }">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" id="addSubscriberButton">
+                                    Create
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                    @click.prevent="showModal('')">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop d-none"
+                :class="{ 'show fade d-block' : modal }">
             </div>
         </div>
         <script src="{{ mix('js/app.js')}}"></script>

@@ -12768,14 +12768,41 @@ module.exports = g;
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.config.productionTip = false;
-var app = new Vue({
+new Vue({
   el: '#app',
   data: {
-    showTab: 'subscribers'
+    showTab: 'subscribers',
+    modal: '',
+    errors: ['']
   },
   methods: {
     show: function show(tab) {
       this.showTab = tab;
+    },
+    showModal: function showModal(modal) {
+      this.modal = modal;
+      var body = document.body.classList;
+      modal ? body.add('modal-open') : body.remove('modal-open');
+    },
+    closeModal: function closeModal(target) {
+      outerModal = document.getElementById('addSubscriber');
+      target == outerModal ? this.modal = '' : '';
+    },
+    addSubscriber: function addSubscriber(e) {
+      e.preventDefault();
+      var self = this;
+      var action = e.target.action;
+      var formData = new FormData(e.target);
+      var button = document.querySelector('#addSubscriberButton');
+      button.disabled = true;
+      axios.post(action, formData).then(function (response) {
+        console.log("response", response);
+      })["catch"](function (error) {
+        console.log("error: ", error.response);
+        button.disabled = false;
+      })["finally"](function () {
+        self.modal = '';
+      });
     }
   }
 });
