@@ -203,18 +203,18 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="field_name">Field Name</label>
-                                            <input type="text" class="form-control" name="field_name" placeholder="Field Name"
-                                                :class="{ 'border-danger' : errors.includes('field_name') }">
+                                            <label for="title">Field Title</label>
+                                            <input type="text" class="form-control" name="title" placeholder="Field Title"
+                                                :class="{ 'border-danger' : errors.includes('title') }">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="field_type">Field Type</label>
-                                            <select class="form-control" name="field_type"
-                                                :class="{ 'border-danger' : errors.includes('field_type') }">
+                                            <label for="type">Field Type</label>
+                                            <select class="form-control" name="type"
+                                                :class="{ 'border-danger' : errors.includes('type') }">
                                                 <option value="" selected>Field Type</option>
                                                 <option value="date">Date</option>
                                                 <option value="number">Number</option>

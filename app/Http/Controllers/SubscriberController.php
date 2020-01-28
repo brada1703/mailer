@@ -89,12 +89,9 @@ class SubscriberController extends Controller
         };
 
         // Return the updated databases to the front end
-        $subscribers  = Subscriber::all();
-        $field_values = FieldValue::all();
-
         return response()->json([
-            'subscribers'  => $subscribers,
-            'field_values' => $field_values
+            'subscribers'  => Subscriber::all(),
+            'field_values' => FieldValue::all()
         ]);
     }
 

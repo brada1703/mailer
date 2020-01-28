@@ -12,6 +12,7 @@ new Vue({
         errors: [''],
         subscribers: [''],
         fieldValues: [''],
+        fields: [''],
     },
 
     methods: {
@@ -41,6 +42,25 @@ new Vue({
                 .then(function(response){
                     self.subscribers = response.data.subscribers
                     self.fieldValues = response.data.fieldValues
+                    self.showModal('')
+                })
+                .catch(function(error) {
+                    console.log("error: ", error.response)
+                    button.disabled = false
+                    self.errors = Object.keys(error.response.data.errors)
+                })
+        },
+        addField(e) {
+            e.preventDefault()
+            let self = this
+            let action = e.target.action
+            let formData = new FormData(e.target)
+            let button = document.querySelector('#addFieldButton')
+            button.disabled = true
+            axios
+                .post(action, formData)
+                .then(function(response){
+                    self.fields = response.data.fields
                     self.showModal('')
                 })
                 .catch(function(error) {
