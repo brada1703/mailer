@@ -25,8 +25,8 @@ class FieldValue extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        // 'subscriber_id',
-        // 'field_id',
+        'subscriber_id',
+        'field_id',
         'value',
         'created_at',
         'updated_at',

@@ -18,8 +18,8 @@ class DashboardController extends Controller
     {
         return view('dashboard', [
             'fieldvalues' => FieldValue::all(),
-            'subscribers' => Subscriber::all(),
-            'fields' => Field::all(),
+            'subscribers' => Subscriber::orderBy('created_at','desc')->get(),
+            'fields' => Field::orderBy('created_at','desc')->get(),
         ]);
     }
 }

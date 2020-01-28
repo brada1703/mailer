@@ -118,6 +118,7 @@
                     <div class="modal-content">
                         <form action="/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
                             @csrf
+                            <input type="hidden" name="">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addSubscriberTitle">Add New Subscriber</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
@@ -131,22 +132,40 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="form-group">
-                                            <input type="text" id="first_name" class="form-control" name="first_name" placeholder="First Name"
+                                            <label for="first_name">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" placeholder="First Name"
                                                 :class="{ 'border-danger' : errors.includes('first_name') }">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="form-group">
-                                            <input type="text" id="last_name" class="form-control" name="last_name" placeholder="Last Name"
+                                            <label for="last_name">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" placeholder="Last Name"
                                                 :class="{ 'border-danger' : errors.includes('last_name') }">
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <input type="email" id="email" class="form-control" name="email" placeholder="Email"
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" name="email" placeholder="Email"
                                                 :class="{ 'border-danger' : errors.includes('email') }">
                                         </div>
                                     </div>
+                                    @foreach($fields as $field)
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="field_{{ $field->id }}">{{ ucfirst($field->title) }}</label>
+                                                <input class="form-control" name="field_{{ $field->id }}_{{ $field->type }}" placeholder="{{ ucfirst($field->title) }}"
+                                                    @switch($field->type)
+                                                        @case('date') type="date"
+                                                        @case('number') type="number"
+                                                        @case('string') type="text"
+                                                        @case('boolean') type="checkbox"
+                                                        @default type="text"
+                                                    @endswitch>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                             <div class="modal-footer">

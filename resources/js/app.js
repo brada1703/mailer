@@ -36,7 +36,7 @@ new Vue({
                 .post(action, formData)
                 .then(function(response){
                     console.log("response", response)
-                    self.modal = ''
+                    self.showModal('')
                 })
                 .catch(function(error) {
                     console.log("error: ", error.response)
