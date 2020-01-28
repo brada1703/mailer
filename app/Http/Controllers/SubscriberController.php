@@ -37,6 +37,10 @@ class SubscriberController extends Controller
         // Get subscriber ID to use for each field value
         $subscriber_id = $subscriber->id;
 
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // Get array of field IDs -> for validation -> within array
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         // Get an array of all of the field inputs
         $fields = array_filter($request->all(), function($key){
             return strpos($key, 'field_') === 0;
@@ -82,10 +86,14 @@ class SubscriberController extends Controller
             );
         };
 
-        return('hey');
+        // Return the updated databases to the front end
+        $subscribers  = Subscriber::all();
+        $field_values = FieldValue::all();
 
-        // return redirect('/');
-        // return list of subscribers in JSON format to be parsed by the front-end
+        return response()->json([
+            'subscribers'  => $subscribers,
+            'field_values' => $field_values
+        ]);
     }
 
     /**

@@ -11,7 +11,6 @@
         <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
 
     </head>
-    {{-- <body :class="{ 'modal-open' : showModalSubscriber }"> --}}
     <body>
         <div id="app">
             <p class="text-center title mt-4">Mailer Dashboard</p>
@@ -118,7 +117,6 @@
                     <div class="modal-content">
                         <form action="/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
                             @csrf
-                            <input type="hidden" name="">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addSubscriberTitle">Add New Subscriber</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"

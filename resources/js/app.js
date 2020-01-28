@@ -10,6 +10,8 @@ new Vue({
         showTab: 'subscribers',
         modal: '',
         errors: [''],
+        subscribers: [''],
+        fieldValues: [''],
     },
 
     methods: {
@@ -35,7 +37,8 @@ new Vue({
             axios
                 .post(action, formData)
                 .then(function(response){
-                    console.log("response", response)
+                    self.subscribers = response.data.subscribers
+                    self.fieldValues = response.data.fieldValues
                     self.showModal('')
                 })
                 .catch(function(error) {
