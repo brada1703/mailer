@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Subscriber;
 use App\FieldValue;
+use App\Rules\EmailDomainActive;
 use Illuminate\Http\Request;
 
 class SubscriberController extends Controller
@@ -28,7 +29,7 @@ class SubscriberController extends Controller
                 ->validate([
                     'first_name' => 'required',
                     'last_name'  => 'required',
-                    'email'      => 'required|email',
+                    'email'      => ['required', 'email', new EmailDomainActive],
                     'state'      => 'required',
                     'created_at' => 'required',
                 ])
