@@ -83,7 +83,10 @@
             <div class="container" id="fields" v-show="showTab == 'fields'">
                 <div class="row">
                     <div class="col-12 options mt-3">
-                        <button class="btn btn-sm btn-warning">Add Field</button>
+                        <button class="btn btn-sm btn-warning"
+                            @click="showModal('fields')">
+                            Add Field
+                        </button>
                     </div>
                     <div class="col-12">
                         <table class="table table-striped">
@@ -168,6 +171,62 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success" id="addSubscriberButton">
+                                    Create
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                    @click.prevent="showModal('')">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="addField" tabindex="-1" role="dialog"
+                aria-labelledby="addFieldTitle" aria-modal="true"
+                :class="{ 'show d-block' : modal == 'fields' }"
+                @click="closeModal($event.target)">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="/fields" method="POST" class="form" @submit.prevent="addField">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addFieldTitle">Add New Field</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click.prevent="showModal('')">
+                                    <span aria-hidden="true">
+                                        &times;
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="modal-body container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="field_name">Field Name</label>
+                                            <input type="text" class="form-control" name="field_name" placeholder="Field Name"
+                                                :class="{ 'border-danger' : errors.includes('field_name') }">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="field_type">Field Type</label>
+                                            <select class="form-control" name="field_type"
+                                                :class="{ 'border-danger' : errors.includes('field_type') }">
+                                                <option value="" selected>Field Type</option>
+                                                <option value="date">Date</option>
+                                                <option value="number">Number</option>
+                                                <option value="string">String</option>
+                                                <option value="boolean">Boolean</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" id="addFieldButton">
                                     Create
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"

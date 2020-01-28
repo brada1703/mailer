@@ -26,6 +26,8 @@ new Vue({
         closeModal(target) {
             outerModal = document.getElementById('addSubscriber')
             target == outerModal ? this.modal = '' : ''
+            let body = document.body.classList
+            body.remove('modal-open')
         },
         addSubscriber(e){
             e.preventDefault()
