@@ -24,8 +24,8 @@ new Vue({
             modal ? body.add('modal-open') : body.remove('modal-open')
         },
         closeModal(target) {
-            outerModal = document.getElementById('addSubscriber')
-            target == outerModal ? this.modal = '' : ''
+            outerModal = [document.getElementById('addSubscriber'), document.getElementById('addField')]
+            outerModal.includes(target) ? this.modal = '' : ''
             let body = document.body.classList
             body.remove('modal-open')
         },
