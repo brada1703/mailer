@@ -13,19 +13,6 @@
     </head>
     <body>
         <div id="app">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <p class="text-danger">Test</p>
-                        <ul id="example-1">
-                            <li v-for="subscriber in subscribers">
-                                @{{ subscriber.email }}
-                            </li>
-                        </ul>
-
-                    </div>
-                </div>
-            </div>
             <p class="text-center title mt-4">Mailer Dashboard</p>
             <div class="container">
                 <div class="row">
@@ -64,11 +51,11 @@
                                     <th class="border-top-0" scope="col">First Name</th>
                                     <th class="border-top-0" scope="col">Last Name</th>
                                     <th class="border-top-0" scope="col">State</th>
-                                    @foreach($fields as $field)
+                                    <template v-for="field in fields">
                                         <th class="border-top-0 text-uppercase" scope="col">
-                                            {{ $field->title }}
+                                            @{{ field.title }}
                                         </th>
-                                    @endforeach
+                                    </template>
                                 </tr>
                             </thead>
                             <tbody>

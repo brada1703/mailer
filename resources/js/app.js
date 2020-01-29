@@ -24,23 +24,23 @@ const vue = new Vue({
                 console.log("error: ", error.response)
             })
 
-        // axios
-        //     .get('/fields')
-        //     .then(function (response) {
-        //         vue.fields = response.data.data
-        //     })
-        //     .catch(function(error) {
-        //         console.log("error: ", error.response)
-        //     })
+        axios
+            .get('/fields')
+            .then(function (response) {
+                vue.fields = response.data
+            })
+            .catch(function(error) {
+                console.log("error: ", error.response)
+            })
 
-        // axios
-        //     .get('/fieldvalues')
-        //     .then(function (response) {
-        //         vue.fields = response.data.data
-        //     })
-        //     .catch(function(error) {
-        //         console.log("error: ", error.response)
-        //     })
+        axios
+            .get('/fieldvalues')
+            .then(function (response) {
+                vue.fieldValues = response.data
+            })
+            .catch(function(error) {
+                console.log("error: ", error.response)
+            })
     },
 
     methods: {

@@ -16,7 +16,7 @@ class SubscriberController extends Controller
      */
     public function index()
     {
-        return response()->json(Subscriber::all());
+        return response()->json(Subscriber::orderBy('created_at','desc')->get());
     }
 
     /**
@@ -103,50 +103,5 @@ class SubscriberController extends Controller
             'subscribers'  => Subscriber::all(),
             'field_values' => FieldValue::all()
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Subscriber  $subscriber
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Subscriber $subscriber)
-    {
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Subscriber  $subscriber
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Subscriber $subscriber)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Subscriber  $subscriber
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Subscriber $subscriber)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Subscriber  $subscriber
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Subscriber $subscriber)
-    {
-        //
     }
 }

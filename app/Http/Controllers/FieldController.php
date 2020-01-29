@@ -14,7 +14,7 @@ class FieldController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Field::orderBy('created_at','desc')->get());
     }
 
     /**
@@ -42,50 +42,5 @@ class FieldController extends Controller
         return response()->json([
             'fields'  => Field::all()
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Field $field)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Field $field)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Field $field)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Field $field)
-    {
-        //
     }
 }
