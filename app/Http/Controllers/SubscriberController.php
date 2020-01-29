@@ -100,8 +100,8 @@ class SubscriberController extends Controller
 
         // Return the updated databases to the front end
         return response()->json([
-            'subscribers'  => Subscriber::all(),
-            'field_values' => FieldValue::all()
+            'subscribers'  => Subscriber::orderBy('created_at','desc')->get(),
+            'field_values' => FieldValue::orderBy('created_at','desc')->get()
         ]);
     }
 }

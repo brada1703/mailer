@@ -15,35 +15,22 @@ const vue = new Vue({
         fields: [''],
     },
     created: function () {
-        axios
-            .get('/subscribers')
-            .then(function (response) {
-                vue.subscribers = response.data
-            })
-            .catch(function(error) {
-                console.log("error: ", error.response)
-            })
-
-        axios
-            .get('/fields')
-            .then(function (response) {
-                vue.fields = response.data
-            })
-            .catch(function(error) {
-                console.log("error: ", error.response)
-            })
-
-        axios
-            .get('/fieldvalues')
-            .then(function (response) {
-                vue.fieldValues = response.data
-            })
-            .catch(function(error) {
-                console.log("error: ", error.response)
-            })
+        axios.get('/fields').then(response => this.fields = response.data)
+        axios.get('/subscribers').then(response => this.subscribers = response.data)
+        axios.get('/fieldvalues').then(response => this.fieldValues = response.data)
     },
-
     methods: {
+        filteredValues(subscriber_id, field_id) {
+            let value = vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id).length
+            return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
+
+
+            // console.log(value)
+            // if (value) {
+                // return vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id)
+            // }
+            // return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
+        },
         show(tab) {
             this.showTab = tab
         },

@@ -59,22 +59,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($subscribers as $subscriber)
-                                <tr>
-                                    <th scope="row">{{ $subscriber->id }}</th>
-                                    <td>{{ $subscriber->email }}</td>
-                                    <td>{{ $subscriber->first_name }}</td>
-                                    <td>{{ $subscriber->last_name }}</td>
-                                    <td>{{ $subscriber->state }}</td>
-                                    @foreach($fields as $field)
+                                <template v-for="subscriber in subscribers">
+                                    <tr>
+                                    <th scope="row">@{{ subscriber.id }}</th>
+                                    <td>@{{ subscriber.email }}</td>
+                                    <td>@{{ subscriber.first_name }}</td>
+                                    <td>@{{ subscriber.last_name }}</td>
+                                    <td>@{{ subscriber.state }}</td>
+                                    <template v-for="field in fields">
                                         <td>
-                                            @if($fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->count())
-                                                {{ $fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->first()->value }}
-                                            @endif
+                                            <template v-for="fieldValue in filteredValues(subscriber.id, field.id)">
+                                                <span v-if="fieldValue">@{{ fieldValue.value }}</span>
+                                            </template>
+                                            {{-- @{{ echo 'test' }} --}}
+                                            {{-- <template v-if="fieldValues.subscriber_id == subscriber.id && fieldValues.field_id == field.id"> --}}
+                                            {{-- @if($fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->count()) --}}
+                                                {{-- {{ $fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->first()->value }} --}}
+                                            {{-- @endif --}}
+                                            {{-- </template> --}}
                                         </td>
-                                    @endforeach
+                                    </template>
                                 </tr>
-                                @endforeach
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -99,14 +105,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($fields as $field)
-                                <tr>
-                                    <th scope="row">{{ $field->id }}</th>
-                                    <td>{{ $field->title }}</td>
-                                    <td>{{ $field->type }}</td>
-                                    <td>{${{ $field->title }}}</td>
-                                </tr>
-                                @endforeach
+                                <template v-for="field in fields">
+                                    <tr>
+                                        <th scope="row">@{{ field.id }}</th>
+                                        <td>@{{ field.title }}</td>
+                                        <td>@{{ field.type }}</td>
+                                        <td>{$@{{ field.title.toLowerCase() }}}</td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
