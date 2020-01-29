@@ -97,7 +97,6 @@
                                     <th class="border-top-0" scope="col">#</th>
                                     <th class="border-top-0" scope="col">Title</th>
                                     <th class="border-top-0" scope="col">Type</th>
-                                    <th class="border-top-0" scope="col">Tag</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -106,7 +105,6 @@
                                         <th scope="row">@{{ field.id }}</th>
                                         <td>@{{ field.title }}</td>
                                         <td>@{{ field.type }}</td>
-                                        <td class="text-lowercase">{$@{{ field.title }}}</td>
                                     </tr>
                                 </template>
                             </tbody>
