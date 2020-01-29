@@ -68,15 +68,11 @@
                                     <td>@{{ subscriber.state }}</td>
                                     <template v-for="field in fields">
                                         <td>
-                                            <template v-for="fieldValue in filteredValues(subscriber.id, field.id)">
-                                                <span v-if="fieldValue">@{{ fieldValue.value }}</span>
+                                            <template v-for="fieldValue in fieldValues">
+                                                <span v-if="fieldValue.subscriber_id == subscriber.id && fieldValue.field_id == field.id">
+                                                    @{{ fieldValue.value }}
+                                                </span>
                                             </template>
-                                            {{-- @{{ echo 'test' }} --}}
-                                            {{-- <template v-if="fieldValues.subscriber_id == subscriber.id && fieldValues.field_id == field.id"> --}}
-                                            {{-- @if($fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->count()) --}}
-                                                {{-- {{ $fieldvalues->where('subscriber_id', $subscriber->id)->where('field_id', $field->id)->first()->value }} --}}
-                                            {{-- @endif --}}
-                                            {{-- </template> --}}
                                         </td>
                                     </template>
                                 </tr>
@@ -110,7 +106,7 @@
                                         <th scope="row">@{{ field.id }}</th>
                                         <td>@{{ field.title }}</td>
                                         <td>@{{ field.type }}</td>
-                                        <td>{$@{{ field.title.toLowerCase() }}}</td>
+                                        <td class="text-lowercase">{$@{{ field.title }}}</td>
                                     </tr>
                                 </template>
                             </tbody>

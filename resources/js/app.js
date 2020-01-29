@@ -20,17 +20,19 @@ const vue = new Vue({
         axios.get('/fieldvalues').then(response => this.fieldValues = response.data)
     },
     methods: {
-        filteredValues(subscriber_id, field_id) {
-            let value = vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id).length
-            return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
+        // filteredValues(subscriber_id, field_id) {
+        //     // let value = vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id).length
+        //     // return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
+
+        //     return vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id)
 
 
-            // console.log(value)
-            // if (value) {
-                // return vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id)
-            // }
-            // return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
-        },
+        //     // console.log(value)
+        //     // if (value) {
+        //         // return vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id)
+        //     // }
+        //     // return value ? vue.fieldValues.filter(fieldValue => fieldValue.subscriber_id == subscriber_id && fieldValue.field_id == field_id) : ''
+        // },
         show(tab) {
             this.showTab = tab
         },
