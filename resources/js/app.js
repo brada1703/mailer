@@ -4,7 +4,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 Vue.config.productionTip = false;
 
-new Vue({
+const vue = new Vue({
     el: '#app',
     data: {
         showTab: 'subscribers',
@@ -13,6 +13,34 @@ new Vue({
         subscribers: [''],
         fieldValues: [''],
         fields: [''],
+    },
+    created: function () {
+        axios
+            .get('/subscribers')
+            .then(function (response) {
+                vue.subscribers = response.data
+            })
+            .catch(function(error) {
+                console.log("error: ", error.response)
+            })
+
+        // axios
+        //     .get('/fields')
+        //     .then(function (response) {
+        //         vue.fields = response.data.data
+        //     })
+        //     .catch(function(error) {
+        //         console.log("error: ", error.response)
+        //     })
+
+        // axios
+        //     .get('/fieldvalues')
+        //     .then(function (response) {
+        //         vue.fields = response.data.data
+        //     })
+        //     .catch(function(error) {
+        //         console.log("error: ", error.response)
+        //     })
     },
 
     methods: {
