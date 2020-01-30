@@ -14,7 +14,7 @@ class FieldController extends Controller
      */
     public function index()
     {
-        return response()->json(Field::orderBy('created_at','desc')->get());
+        return response()->json(Field::orderBy('created_at', 'desc')->get());
     }
 
     /**
@@ -32,15 +32,15 @@ class FieldController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ])
                 ->validate([
-                    'title'      => 'required',
-                    'type'       => 'required|in:date,number,string,boolean',
+                    'title' => 'required',
+                    'type' => 'required|in:date,number,string,boolean',
                     'created_at' => 'required',
                 ])
         );
 
         // Return the updated databases to the front end
         return response()->json([
-            'fields'  => Field::orderBy('created_at','desc')->get()
+            'fields' => Field::orderBy('created_at', 'desc')->get()
         ]);
     }
 }

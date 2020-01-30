@@ -11361,3 +11361,9 @@ a.text-dark:focus {
   font-weight: 700;
 }
 
+.form-group > label {
+  font-size: 0.7rem;
+  color: gray;
+  margin-bottom: 0;
+}
+

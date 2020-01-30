@@ -19,8 +19,10 @@ class CreateFieldValuesTable extends Migration
             $table->foreign('subscriber_id')->references('id')->on('subscribers')->onDelete('cascade');
             $table->unsignedBigInteger('field_id');
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
-            $table->string('value',255);
+            $table->string('value', 255);
             $table->timestamps();
+
+            $table->unique(['subscriber_id', 'field_id']);
         });
     }
 

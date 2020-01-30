@@ -14395,12 +14395,28 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 Vue.config.productionTip = false;
-new Vue({
+var vue = new Vue({
   el: '#app',
   data: {
     showTab: 'subscribers',
     modal: '',
-    errors: ['']
+    errors: [''],
+    subscribers: [''],
+    fieldValues: [''],
+    fields: ['']
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/fields').then(function (response) {
+      return _this.fields = response.data;
+    });
+    axios.get('/subscribers').then(function (response) {
+      return _this.subscribers = response.data;
+    });
+    axios.get('/fieldvalues').then(function (response) {
+      return _this.fieldValues = response.data;
+    });
   },
   methods: {
     show: function show(tab) {
@@ -14412,8 +14428,10 @@ new Vue({
       modal ? body.add('modal-open') : body.remove('modal-open');
     },
     closeModal: function closeModal(target) {
-      outerModal = document.getElementById('addSubscriber');
-      target == outerModal ? this.modal = '' : '';
+      outerModal = [document.getElementById('addSubscriber'), document.getElementById('addField')];
+      outerModal.includes(target) ? this.modal = '' : '';
+      var body = document.body.classList;
+      body.remove('modal-open');
     },
     addSubscriber: function addSubscriber(e) {
       e.preventDefault();
@@ -14423,8 +14441,25 @@ new Vue({
       var button = document.querySelector('#addSubscriberButton');
       button.disabled = true;
       axios.post(action, formData).then(function (response) {
-        console.log("response", response);
-        self.modal = '';
+        self.subscribers = response.data.subscribers;
+        self.fieldValues = response.data.fieldValues;
+        self.showModal('');
+      })["catch"](function (error) {
+        console.log("error: ", error.response);
+        button.disabled = false;
+        self.errors = Object.keys(error.response.data.errors);
+      });
+    },
+    addField: function addField(e) {
+      e.preventDefault();
+      var self = this;
+      var action = e.target.action;
+      var formData = new FormData(e.target);
+      var button = document.querySelector('#addFieldButton');
+      button.disabled = true;
+      axios.post(action, formData).then(function (response) {
+        self.fields = response.data.fields;
+        self.showModal('');
       })["catch"](function (error) {
         console.log("error: ", error.response);
         button.disabled = false;
