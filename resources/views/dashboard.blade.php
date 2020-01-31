@@ -198,7 +198,7 @@
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form action="/fields" method="POST" class="form" @submit.prevent="addField">
+                        <form action="/api/fields" method="POST" class="form" @submit.prevent="addField">
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addFieldTitle">Add New Field</h5>

@@ -15,7 +15,7 @@ const vue = new Vue({
         fields: [''],
     },
     created: function () {
-        axios.get('/fields').then(response => this.fields = response.data)
+        axios.get('/api/fields').then(response => this.fields = response.data)
         axios.get('/api/subscribers').then(response => this.subscribers = response.data)
         axios.get('/fieldvalues').then(response => this.fieldValues = response.data)
     },

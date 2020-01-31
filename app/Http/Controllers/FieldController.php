@@ -14,7 +14,7 @@ class FieldController extends Controller
      */
     public function index()
     {
-        return response()->json(Field::orderBy('created_at', 'desc')->get());
+        // return response()->json(Field::orderBy('created_at', 'desc')->get());
     }
 
     /**
@@ -25,20 +25,20 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
-        Field::create(
-            request()
-                ->merge([
-                    'created_at' => date('Y-m-d H:i:s'),
-                ])
-                ->validate([
-                    'title' => 'required',
-                    'type' => 'required|in:date,number,string,boolean',
-                    'created_at' => 'required',
-                ])
-        );
+        // Field::create(
+        //     request()
+        //         ->merge([
+        //             'created_at' => date('Y-m-d H:i:s'),
+        //         ])
+        //         ->validate([
+        //             'title' => 'required',
+        //             'type' => 'required|in:date,number,string,boolean',
+        //             'created_at' => 'required',
+        //         ])
+        // );
 
-        return response()->json([
-            'fields' => Field::orderBy('created_at', 'desc')->get()
-        ]);
+        // return response()->json([
+        //     'fields' => Field::orderBy('created_at', 'desc')->get()
+        // ]);
     }
 }
