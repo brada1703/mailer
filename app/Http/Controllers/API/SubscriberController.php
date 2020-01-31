@@ -99,7 +99,12 @@ class SubscriberController extends Controller
 
     public function show($id)
     {
-        return response()->json(null, 501);
+        $subscriber = Subscriber::where('id', $id)->get();
+        $values = FieldValue::where('subscriber_id', $id)->get();
+        return response()->json([
+            'subscriber' => $subscriber,
+            'values' => $values
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -111,6 +116,7 @@ class SubscriberController extends Controller
     {
         $subscriber = Subscriber::where('id', $id);
         $subscriber->delete();
+
         return response()->json([
             'subscribers' => Subscriber::orderBy('created_at', 'desc')->get(),
             'fieldValues' => FieldValue::orderBy('created_at', 'desc')->get()

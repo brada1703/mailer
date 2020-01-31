@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-12 options mt-3">
                         <button class="btn btn-sm btn-warning"
-                            @click="showModal('subscribers')">
+                            @click="showModal('addSubscriber')">
                             Add Subscriber
                         </button>
                     </div>
@@ -87,7 +87,12 @@
                                             </template>
                                         </td>
                                     </template>
-                                    <td>Edit</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" :id="'loadSubscriber' + subscriber.id"
+                                            @click="showModal('editSubscriber'); loadSubscriber(subscriber.id);">
+                                            Edit
+                                        </button>
+                                    </td>
                                     <td>
                                         <form :action="'/api/subscribers/' + subscriber.id" method="POST" class="form" @submit.prevent="deleteSubscriber">
                                             @csrf
@@ -110,7 +115,7 @@
                 <div class="row">
                     <div class="col-12 options mt-3">
                         <button class="btn btn-sm btn-warning"
-                            @click="showModal('fields')">
+                            @click="showModal('addField')">
                             Add Field
                         </button>
                     </div>
@@ -131,7 +136,12 @@
                                         <th scope="row">@{{ field.id }}</th>
                                         <td>@{{ field.title }}</td>
                                         <td>@{{ field.type }}</td>
-                                        <td>Edit</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" :id="'loadField' + field.id"
+                                                @click="showModal('editField'); loadField(field.id);">
+                                                Edit
+                                            </button>
+                                        </td>
                                         <td>
                                             <form :action="'/api/fields/' + field.id" method="POST" class="form" @submit.prevent="deleteField">
                                                 @csrf
@@ -152,7 +162,7 @@
             </div>
             <div class="modal fade" id="addSubscriber" tabindex="-1" role="dialog"
                 aria-labelledby="addSubscriberTitle" aria-modal="true"
-                :class="{ 'show d-block' : modal == 'subscribers' }"
+                :class="{ 'show d-block' : modal == 'addSubscriber' }"
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -220,9 +230,97 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="editSubscriber" tabindex="-1" role="dialog" aria-labelledby="editSubscriberTitle" aria-modal="true"
+                :class="{ 'show d-block' : modal == 'editSubscriber' }" @click="closeModal($event.target)">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="/api/subscribers/ID" method="PUT" class="form" id="editSubscriberForm" @submit.prevent="editSubscriber">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSubscriberTitle">Edit Subscriber</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                    @click.prevent="showModal('')">
+                                    <span aria-hidden="true">
+                                        &times;
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="modal-body container">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="first_name">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" placeholder="First Name"
+                                                :value="editableSubscriber.first_name" :class="{ 'border-danger' : errors.includes('first_name') }">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="last_name">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" placeholder="Last Name"
+                                                :value="editableSubscriber.last_name" :class="{ 'border-danger' : errors.includes('last_name') }">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" name="email" placeholder="Email"
+                                                :value="editableSubscriber.email" :class="{ 'border-danger' : errors.includes('email') }">
+                                        </div>
+                                    </div>
+                                    <template v-for="field in fields">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label :for="'field_' + field.id">@{{ field.title }}</label>
+                                                <template v-if="editableFieldValues != '[]'">
+                                                    <template v-for="editableFieldValue in editableFieldValues" v-if="editableFieldValue.field_id == field.id">
+                                                        <template v-if="field.type == 'date'">
+                                                            <input class="form-control" type="date" value=""
+                                                                :name="'field_' + field.id + '_' + field.type"
+                                                                :placeholder="field.title"
+                                                                :value="editableFieldValue.value">
+                                                        </template>
+                                                        <template v-if="field.type == 'number'">
+                                                            <input class="form-control" type="number" value=""
+                                                                :name="'field_' + field.id + '_' + field.type"
+                                                                :placeholder="field.title"
+                                                                :value="editableFieldValue.value">
+                                                        </template>
+                                                        <template v-if="field.type == 'string'">
+                                                            <input class="form-control" type="text" value=""
+                                                                :name="'field_' + field.id + '_' + field.type"
+                                                                :placeholder="field.title"
+                                                                :value="editableFieldValue.value">
+                                                        </template>
+                                                        <template v-if="field.type == 'boolean'">
+                                                            <input class="form-control" type="checkbox" value="true"
+                                                                :name="'field_' + field.id + '_' + field.type"
+                                                                :placeholder="field.title"
+                                                                :value="editableFieldValue.value">
+                                                        </template>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" id="editSubscriberButton">
+                                    Create
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                    @click.prevent="showModal('')">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div class="modal fade" id="addField" tabindex="-1" role="dialog"
                 aria-labelledby="addFieldTitle" aria-modal="true"
-                :class="{ 'show d-block' : modal == 'fields' }"
+                :class="{ 'show d-block' : modal == 'addField' }"
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">

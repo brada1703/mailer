@@ -9,10 +9,13 @@ const vue = new Vue({
     data: {
         showTab: 'subscribers',
         modal: '',
-        errors: [''],
-        subscribers: [''],
-        fieldValues: [''],
-        fields: [''],
+        errors: [],
+        subscribers: [],
+        fieldValues: [],
+        fields: [],
+        editableSubscriber: [],
+        editableFieldValues: [],
+        editableField: [],
     },
     created: function () {
         axios.get('/api/fields').then(response => this.fields = response.data)
@@ -29,7 +32,13 @@ const vue = new Vue({
             modal ? body.add('modal-open') : body.remove('modal-open')
         },
         closeModal(target) {
-            outerModal = [document.getElementById('addSubscriber'), document.getElementById('addField')]
+            // Refactor this
+            outerModal = [
+                document.getElementById('addSubscriber'),
+                document.getElementById('editSubscriber'),
+                document.getElementById('addField'),
+                document.getElementById('editField')
+            ]
             outerModal.includes(target) ? this.modal = '' : ''
             let body = document.body.classList
             body.remove('modal-open')
@@ -54,6 +63,31 @@ const vue = new Vue({
                     button.disabled = false
                 })
         },
+        loadSubscriber(id) {
+            axios.get('/api/subscribers/' + id).then(response => {
+                this.editableSubscriber = response.data.subscriber[0];
+                this.editableFieldValues = response.data.values;
+            })
+        },
+        editSubscriber(id) {
+            console.log('edit subscriber ' + id)
+            // e.preventDefault()
+            // let button = document.querySelector('#editSubscriberButton')
+            // button.disabled = true
+            // console.log(e)
+            // axios
+            //     .post(e.target.action, new FormData(e.target))
+            //     .then(response => {
+            //         this.subscribers = response.data.subscribers;
+            //         this.fieldValues = response.data.fieldValues;
+            //         this.showModal('')
+            //     })
+            //     .catch(error => {
+            //         console.log("error: ", error.response)
+            //         button.disabled = false
+            //         this.errors = Object.keys(error.response.data.errors)
+            //     })
+        },
         deleteSubscriber(e) {
             e.preventDefault()
             let id = new FormData(e.target).get('subscriber_id')
@@ -76,24 +110,6 @@ const vue = new Vue({
                     })
             }
         },
-        editSubscriber(e) {
-            e.preventDefault()
-            let button = document.querySelector('#editSubscriberButton')
-            button.disabled = true
-            console.log(e)
-            // axios
-            //     .post(e.target.action, new FormData(e.target))
-            //     .then(response => {
-            //         this.subscribers = response.data.subscribers;
-            //         this.fieldValues = response.data.fieldValues;
-            //         this.showModal('')
-            //     })
-            //     .catch(error => {
-            //         console.log("error: ", error.response)
-            //         button.disabled = false
-            //         this.errors = Object.keys(error.response.data.errors)
-            //     })
-        },
         addField(e) {
             e.preventDefault()
             let button = document.querySelector('#addFieldButton')
@@ -113,6 +129,12 @@ const vue = new Vue({
                 .finally(function () {
                     button.disabled = false
                 })
+        },
+        loadField(id) {
+            axios.get('/api/fields/' + id).then(response => { this.field = response.data.field[0] })
+        },
+        editField(id) {
+            console.log('edit field ' + id)
         },
         deleteField(e) {
             e.preventDefault()
