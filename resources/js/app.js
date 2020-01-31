@@ -130,10 +130,25 @@ const vue = new Vue({
                 })
         },
         loadField(id) {
-            axios.get('/api/fields/' + id).then(response => { this.field = response.data.field[0] })
+            axios.get('/api/fields/' + id).then(response => { this.editableField = response.data.field[0] })
         },
-        editField(id) {
-            console.log('edit field ' + id)
+        editField(e) {
+            e.preventDefault()
+            let id = new FormData(e.target).get('editableFieldId')
+            let button = document.querySelector('#editFieldButton' + id)
+            button.disabled = true
+            axios
+                .post(e.target.action, new FormData(e.target))
+                .then(response => {
+                    this.fields = response.data.fields;
+                    this.fieldValues = response.data.fieldValues;
+                    this.showModal('')
+                })
+                .catch(error => {
+                    console.log("error: ", error.response)
+                    this.errors = Object.keys(error.response.data.errors)
+                })
+            button.disabled = false
         },
         deleteField(e) {
             e.preventDefault()

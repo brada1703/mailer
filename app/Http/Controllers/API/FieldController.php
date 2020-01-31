@@ -34,12 +34,29 @@ class FieldController extends Controller
 
     public function show($id)
     {
-        //
+        $field = Field::where('id', $id)->get();
+        return response()->json(['field' => $field]);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $field = Field::where('id', $id)->firstOrFail();
+
+        $field->update(
+            request()
+                ->merge([
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ])
+                ->validate([
+                    'title' => 'required',
+                    'type' => 'required|in:date,number,string,boolean',
+                    'updated_at' => 'required',
+                ])
+        );
+
+        return response()->json([
+            'fields' => Field::orderBy('created_at', 'desc')->get()
+        ]);
     }
 
     public function destroy($id)
