@@ -160,10 +160,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="addSubscriber" tabindex="-1" role="dialog"
-                aria-labelledby="addSubscriberTitle" aria-modal="true"
-                :class="{ 'show d-block' : modal == 'addSubscriber' }"
-                @click="closeModal($event.target)">
+            <div class="modal fade" id="addSubscriber" tabindex="-1" role="dialog" aria-labelledby="addSubscriberTitle" aria-modal="true"
+                :class="{ 'show d-block' : modal == 'addSubscriber' }" @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form action="/api/subscribers" method="POST" class="form" id="subscriberForm" @submit.prevent="addSubscriber">
@@ -200,29 +198,26 @@
                                                 :class="{ 'border-danger' : errors.includes('email') }">
                                         </div>
                                     </div>
-                                    @foreach($fields as $field)
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="field_{{ $field->id }}">{{ ucfirst($field->title) }}</label>
-                                                <input class="form-control" name="field_{{ $field->id }}_{{ $field->type }}" placeholder="{{ ucfirst($field->title) }}"
-                                                    @switch($field->type)
-                                                        @case('date') type="date" value=""
-                                                        @case('number') type="number" value=""
-                                                        @case('string') type="text" value=""
-                                                        @case('boolean') type="checkbox" value="true"
-                                                        @default type="text"
-                                                    @endswitch>
-                                            </div>
+                                    <div class="col-12" v-for="field in fields">
+                                        <div class="form-group">
+                                            <label :for="'field_' + field.id">@{{ field.title }}</label>
+                                            <input class="form-control" type="date" value=""
+                                                v-if="field.type == 'date'" :name="'field_' + field.id + '_' + field.type" :placeholder="field.title">
+                                            <input class="form-control" type="number" value=""
+                                                v-if="field.type == 'number'" :name="'field_' + field.id + '_' + field.type" :placeholder="field.title">
+                                            <input class="form-control" type="text" value=""
+                                                v-if="field.type == 'string'" :name="'field_' + field.id + '_' + field.type" :placeholder="field.title">
+                                            <input class="form-control" type="checkbox" value="true"
+                                                v-if="field.type == 'boolean'" :name="'field_' + field.id + '_' + field.type" :placeholder="field.title">
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success" id="addSubscriberButton">
                                     Create
                                 </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                    @click.prevent="showModal('')">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click.prevent="showModal('')">
                                     Cancel
                                 </button>
                             </div>
@@ -268,49 +263,34 @@
                                                 :value="editableSubscriber.email" :class="{ 'border-danger' : errors.includes('email') }">
                                         </div>
                                     </div>
-                                    <template v-for="field in fields">
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label :for="'field_' + field.id">@{{ field.title }}</label>
-                                                <template v-if="editableFieldValues != '[]'">
-                                                    <template v-for="editableFieldValue in editableFieldValues" v-if="editableFieldValue.field_id == field.id">
-                                                        <template v-if="field.type == 'date'">
-                                                            <input class="form-control" type="date" value=""
-                                                                :name="'field_' + field.id + '_' + field.type"
-                                                                :placeholder="field.title"
-                                                                :value="editableFieldValue.value">
-                                                        </template>
-                                                        <template v-if="field.type == 'number'">
-                                                            <input class="form-control" type="number" value=""
-                                                                :name="'field_' + field.id + '_' + field.type"
-                                                                :placeholder="field.title"
-                                                                :value="editableFieldValue.value">
-                                                        </template>
-                                                        <template v-if="field.type == 'string'">
-                                                            <input class="form-control" type="text" value=""
-                                                                :name="'field_' + field.id + '_' + field.type"
-                                                                :placeholder="field.title"
-                                                                :value="editableFieldValue.value">
-                                                        </template>
-                                                        <template v-if="field.type == 'boolean'">
-                                                            <input class="form-control" type="checkbox" value="true"
-                                                                :name="'field_' + field.id + '_' + field.type"
-                                                                :placeholder="field.title"
-                                                                :value="editableFieldValue.value">
-                                                        </template>
-                                                    </template>
-                                                </template>
-                                            </div>
+                                    <div class="col-12" v-for="field in fields">
+                                        <div class="form-group">
+                                            <label :for="'field_' + field.id">@{{ field.title }}</label>
+                                            <input class="form-control" type="date" value="" v-if="field.type == 'date'"
+                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
+                                            <input class="form-control" type="number" value="" v-if="field.type == 'number'"
+                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
+                                            <input class="form-control" type="text" value="" v-if="field.type == 'string'"
+                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
+                                            <input class="form-control" type="checkbox" value="true" v-if="field.type == 'boolean'"
+                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
                                         </div>
-                                    </template>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success" id="editSubscriberButton">
                                     Create
                                 </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                    @click.prevent="showModal('')">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click.prevent="showModal('')">
                                     Cancel
                                 </button>
                             </div>
