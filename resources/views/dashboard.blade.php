@@ -65,7 +65,17 @@
                                     <td>@{{ subscriber.email }}</td>
                                     <td>@{{ subscriber.first_name }}</td>
                                     <td>@{{ subscriber.last_name }}</td>
-                                    <td>@{{ subscriber.state }}</td>
+                                    <td>
+                                        <span class="text-capitalize" :class="{
+                                                'badge badge-secondary' : subscriber.state == 'unconfirmed',
+                                                'badge badge-success' : subscriber.state == 'active',
+                                                'badge badge-danger' : subscriber.state == 'junk',
+                                                'badge badge-warning' : subscriber.state == 'unsubscribed',
+                                                'badge badge-dark' : subscriber.state == 'bounced'
+                                            }">
+                                            @{{ subscriber.state }}
+                                        </span>
+                                    </td>
                                     <template v-for="field in fields">
                                         <td>
                                             <template v-for="fieldValue in fieldValues">
