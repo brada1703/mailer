@@ -19,20 +19,19 @@ class SubscriberController extends Controller
     {
         $now = date('Y-m-d H:i:s');
 
-        // Insert subscriber
         $subscriber = Subscriber::create(
             request()
-                        ->merge([
-                            'state' => 'unconfirmed',
-                            'created_at' => $now,
-                        ])
-                        ->validate([
-                            'first_name' => 'required',
-                            'last_name' => 'required',
-                            'email' => ['required', 'email', new EmailDomainActive],
-                            'state' => 'required',
-                            'created_at' => 'required',
-                        ])
+                ->merge([
+                    'state' => 'unconfirmed',
+                    'created_at' => $now,
+                ])
+                ->validate([
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'email' => ['required', 'email', new EmailDomainActive],
+                    'state' => 'required',
+                    'created_at' => 'required',
+                ])
         );
 
         // Get subscriber ID to use for each field value
@@ -60,40 +59,38 @@ class SubscriberController extends Controller
             $field_type = $field_info[2];
 
             switch ($field_type) {
-                        case 'date':
-                            $validation = 'date';
-                            $value = date('Y-m-d', strtotime($value));
-                            break;
-                        case 'number':
-                            $validation = 'numeric';
-                            break;
-                        case 'string':
-                            $validation = 'string';
-                            break;
-                        case 'boolean':
-                            $validation = 'boolean';
-                            break;
-                    }
+                case 'date':
+                    $validation = 'date';
+                    $value = date('Y-m-d', strtotime($value));
+                    break;
+                case 'number':
+                    $validation = 'numeric';
+                    break;
+                case 'string':
+                    $validation = 'string';
+                    break;
+                case 'boolean':
+                    $validation = 'boolean';
+                    break;
+            }
 
-            // Create each instance within the field_values table
             FieldValue::create(
                 request()
-                            ->merge([
-                                'value' => $value,
-                                'field_id' => $field_id,
-                                'subscriber_id' => $subscriber_id,
-                                'created_at' => $now,
-                            ])
-                            ->validate([
-                                'value' => "nullable|$validation",
-                                'field_id' => 'nullable',
-                                'subscriber_id' => 'nullable',
-                                'created_at' => 'nullable',
-                            ])
+                    ->merge([
+                        'value' => $value,
+                        'field_id' => $field_id,
+                        'subscriber_id' => $subscriber_id,
+                        'created_at' => $now,
+                    ])
+                    ->validate([
+                        'value' => "nullable|$validation",
+                        'field_id' => 'nullable',
+                        'subscriber_id' => 'nullable',
+                        'created_at' => 'nullable',
+                    ])
             );
         };
 
-        // Return the updated databases to the front end
         return response()->json([
             'subscribers' => Subscriber::orderBy('created_at', 'desc')->get(),
             'fieldValues' => FieldValue::orderBy('created_at', 'desc')->get()
@@ -110,14 +107,13 @@ class SubscriberController extends Controller
         return response()->json(null, 501);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        return response()->json(null, 501);
+        $subscriber = Subscriber::where('id', $id);
+        $subscriber->delete();
+        return response()->json([
+            'subscribers' => Subscriber::orderBy('created_at', 'desc')->get(),
+            'fieldValues' => FieldValue::orderBy('created_at', 'desc')->get()
+        ]);
     }
 }

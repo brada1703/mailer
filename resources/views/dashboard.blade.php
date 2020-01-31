@@ -56,6 +56,8 @@
                                             @{{ field.title }}
                                         </th>
                                     </template>
+                                    <th class="border-top-0" scope="col">Edit</th>
+                                    <th class="border-top-0" scope="col">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,6 +87,18 @@
                                             </template>
                                         </td>
                                     </template>
+                                    <td>Edit</td>
+                                    <td>
+                                        <form :action="'/api/subscribers/' + subscriber.id" method="POST" class="form" @submit.prevent="deleteSubscriber">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="subscriber_id" :value="subscriber.id">
+                                            <input type="hidden" name="subscriber_email" :value="subscriber.email">
+                                            <button type="submit" class="btn btn-sm btn-danger" :id="'deleteSubscriber' + subscriber.id">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 </template>
                             </tbody>
@@ -107,6 +121,8 @@
                                     <th class="border-top-0" scope="col">#</th>
                                     <th class="border-top-0" scope="col">Title</th>
                                     <th class="border-top-0" scope="col">Type</th>
+                                    <th class="border-top-0" scope="col">Edit</th>
+                                    <th class="border-top-0" scope="col">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,6 +131,18 @@
                                         <th scope="row">@{{ field.id }}</th>
                                         <td>@{{ field.title }}</td>
                                         <td>@{{ field.type }}</td>
+                                        <td>Edit</td>
+                                        <td>
+                                            <form :action="'/api/fields/' + field.id" method="POST" class="form" @submit.prevent="deleteField">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="field_id" :value="field.id">
+                                                <input type="hidden" name="field_title" :value="field.title">
+                                                <button type="submit" class="btn btn-sm btn-danger" :id="'deleteField' + field.id">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </template>
                             </tbody>
@@ -128,7 +156,7 @@
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form action="/api/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
+                        <form action="/api/subscribers" method="POST" class="form" id="subscriberForm" @submit.prevent="addSubscriber">
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addSubscriberTitle">Add New Subscriber</h5>
@@ -168,9 +196,9 @@
                                                 <label for="field_{{ $field->id }}">{{ ucfirst($field->title) }}</label>
                                                 <input class="form-control" name="field_{{ $field->id }}_{{ $field->type }}" placeholder="{{ ucfirst($field->title) }}"
                                                     @switch($field->type)
-                                                        @case('date') type="date"
-                                                        @case('number') type="number"
-                                                        @case('string') type="text"
+                                                        @case('date') type="date" value=""
+                                                        @case('number') type="number" value=""
+                                                        @case('string') type="text" value=""
                                                         @case('boolean') type="checkbox" value="true"
                                                         @default type="text"
                                                     @endswitch>
@@ -198,7 +226,7 @@
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form action="/api/fields" method="POST" class="form" @submit.prevent="addField">
+                        <form action="/api/fields" method="POST" class="form" id="fieldForm" @submit.prevent="addField">
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addFieldTitle">Add New Field</h5>
