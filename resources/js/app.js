@@ -16,7 +16,7 @@ const vue = new Vue({
     },
     created: function () {
         axios.get('/fields').then(response => this.fields = response.data)
-        axios.get('/subscribers').then(response => this.subscribers = response.data)
+        axios.get('/api/subscribers').then(response => this.subscribers = response.data)
         axios.get('/fieldvalues').then(response => this.fieldValues = response.data)
     },
     methods: {
@@ -36,41 +36,35 @@ const vue = new Vue({
         },
         addSubscriber(e){
             e.preventDefault()
-            let self = this
-            let action = e.target.action
-            let formData = new FormData(e.target)
             let button = document.querySelector('#addSubscriberButton')
             button.disabled = true
             axios
-                .post(action, formData)
-                .then(function(response){
-                    self.subscribers = response.data.subscribers
-                    self.fieldValues = response.data.fieldValues
-                    self.showModal('')
+                .post(e.target.action, new FormData(e.target))
+                .then(response => {
+                    this.subscribers = response.data.subscribers;
+                    this.fieldValues = response.data.fieldValues;
+                    this.showModal('')
                 })
-                .catch(function(error) {
+                .catch(error => {
                     console.log("error: ", error.response)
                     button.disabled = false
-                    self.errors = Object.keys(error.response.data.errors)
+                    this.errors = Object.keys(error.response.data.errors)
                 })
         },
         addField(e) {
             e.preventDefault()
-            let self = this
-            let action = e.target.action
-            let formData = new FormData(e.target)
             let button = document.querySelector('#addFieldButton')
             button.disabled = true
             axios
-                .post(action, formData)
-                .then(function(response){
-                    self.fields = response.data.fields
-                    self.showModal('')
+                .post(e.target.action, new FormData(e.target))
+                .then(response => {
+                    this.fields = response.data.fields
+                    this.showModal('')
                 })
-                .catch(function(error) {
+                .catch(error => {
                     console.log("error: ", error.response)
                     button.disabled = false
-                    self.errors = Object.keys(error.response.data.errors)
+                    this.errors = Object.keys(error.response.data.errors)
                 })
         }
     },

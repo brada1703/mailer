@@ -2,12 +2,12 @@
 <html lang="en-CA">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
         <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
 
         <title>Mailer</title>
-
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
         <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
 
     </head>
@@ -42,7 +42,7 @@
                             Add Subscriber
                         </button>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 max-w-100 overflow-auto">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -118,7 +118,7 @@
                 @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form action="/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
+                        <form action="/api/subscribers" method="POST" class="form" @submit.prevent="addSubscriber">
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addSubscriberTitle">Add New Subscriber</h5>
@@ -161,7 +161,7 @@
                                                         @case('date') type="date"
                                                         @case('number') type="number"
                                                         @case('string') type="text"
-                                                        @case('boolean') type="checkbox"
+                                                        @case('boolean') type="checkbox" value="true"
                                                         @default type="text"
                                                     @endswitch>
                                             </div>

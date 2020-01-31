@@ -25,7 +25,6 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
-        // Insert field
         Field::create(
             request()
                 ->merge([
@@ -38,7 +37,6 @@ class FieldController extends Controller
                 ])
         );
 
-        // Return the updated databases to the front end
         return response()->json([
             'fields' => Field::orderBy('created_at', 'desc')->get()
         ]);

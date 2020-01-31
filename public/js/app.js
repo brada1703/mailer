@@ -14434,36 +14434,36 @@ var vue = new Vue({
       body.remove('modal-open');
     },
     addSubscriber: function addSubscriber(e) {
+      var _this2 = this;
+
       e.preventDefault();
-      var self = this;
-      var action = e.target.action;
-      var formData = new FormData(e.target);
       var button = document.querySelector('#addSubscriberButton');
       button.disabled = true;
-      axios.post(action, formData).then(function (response) {
-        self.subscribers = response.data.subscribers;
-        self.fieldValues = response.data.fieldValues;
-        self.showModal('');
+      axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+        _this2.subscribers = response.data.subscribers;
+        _this2.fieldValues = response.data.fieldValues;
+
+        _this2.showModal('');
       })["catch"](function (error) {
         console.log("error: ", error.response);
         button.disabled = false;
-        self.errors = Object.keys(error.response.data.errors);
+        _this2.errors = Object.keys(error.response.data.errors);
       });
     },
     addField: function addField(e) {
+      var _this3 = this;
+
       e.preventDefault();
-      var self = this;
-      var action = e.target.action;
-      var formData = new FormData(e.target);
       var button = document.querySelector('#addFieldButton');
       button.disabled = true;
-      axios.post(action, formData).then(function (response) {
-        self.fields = response.data.fields;
-        self.showModal('');
+      axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+        _this3.fields = response.data.fields;
+
+        _this3.showModal('');
       })["catch"](function (error) {
         console.log("error: ", error.response);
         button.disabled = false;
-        self.errors = Object.keys(error.response.data.errors);
+        _this3.errors = Object.keys(error.response.data.errors);
       });
     }
   }

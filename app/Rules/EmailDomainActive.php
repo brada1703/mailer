@@ -25,14 +25,10 @@ class EmailDomainActive implements Rule
      */
     public function passes($attribute, $value)
     {
-        $email  = explode("@", $value);
+        $email = explode('@', $value);
         $domain = $email[1];
 
-        if (sizeof(dns_get_record($domain)) > 0)
-        {
-            return true;
-        }
-        return false;
+        return sizeof(dns_get_record($domain)) > 0;
     }
 
     /**
