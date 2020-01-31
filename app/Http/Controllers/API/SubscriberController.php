@@ -34,9 +34,6 @@ class SubscriberController extends Controller
                 ])
         );
 
-        // Get subscriber ID to use for each field value
-        $subscriber_id = $subscriber->id;
-
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Get array of field IDs -> for validation -> within array
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -79,7 +76,7 @@ class SubscriberController extends Controller
                     ->merge([
                         'value' => $value,
                         'field_id' => $field_id,
-                        'subscriber_id' => $subscriber_id,
+                        'subscriber_id' => $subscriber->id,
                         'created_at' => $now,
                     ])
                     ->validate([
@@ -109,7 +106,82 @@ class SubscriberController extends Controller
 
     public function update(Request $request, $id)
     {
-        return response()->json(null, 501);
+        $now = date('Y-m-d H:i:s');
+
+        $subscriber = Subscriber::where('id', $id)->firstOrFail();
+        $subscriber->update(
+            request()
+                ->merge([
+                    'updated_at' => $now,
+                ])
+                ->validate([
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'email' => ['required', 'email', new EmailDomainActive],
+                    'updated_at' => 'required',
+                ])
+        );
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // Get array of field IDs -> for validation -> within array
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        // Get an array of all of the field inputs
+        $fields = array_filter($request->all(), function ($key) {
+            return strpos($key, 'field_') === 0;
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Split this into the information that we want
+
+        // REDO THIS AND GET THE DATA TYPE FROM THE DATABASE
+        // NEVER TRUST PEOPLE
+        // $available_fields = Field::all();
+        // loop through to find the IDs in there
+
+        foreach ($fields as $field_info => $value) {
+            $field_info = explode('_', $field_info);
+            $field_id = $field_info[1];
+            $field_type = $field_info[2];
+
+            switch ($field_type) {
+                case 'date':
+                    $validation = 'date';
+                    $value = date('Y-m-d', strtotime($value));
+                    break;
+                case 'number':
+                    $validation = 'numeric';
+                    break;
+                case 'string':
+                    $validation = 'string';
+                    break;
+                case 'boolean':
+                    $validation = 'boolean';
+                    break;
+            }
+
+            $fieldValue = FieldValue::where(['subscriber_id' => $id, 'field_id' => $field_id])->firstOrFail();
+
+            $fieldValue->update(
+                request()
+                    ->merge([
+                        'value' => $value,
+                        'field_id' => $field_id,
+                        'subscriber_id' => $subscriber->id,
+                        'created_at' => $now,
+                    ])
+                    ->validate([
+                        'value' => "nullable|$validation",
+                        'field_id' => 'nullable',
+                        'subscriber_id' => 'nullable',
+                        'created_at' => 'nullable',
+                    ])
+            );
+        };
+
+        return response()->json([
+            'subscribers' => Subscriber::orderBy('created_at', 'desc')->get(),
+            'fieldValues' => FieldValue::orderBy('created_at', 'desc')->get()
+        ]);
     }
 
     public function destroy($id)

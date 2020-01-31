@@ -229,8 +229,10 @@
                 :class="{ 'show d-block' : modal == 'editSubscriber' }" @click="closeModal($event.target)">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form action="/api/subscribers/ID" method="PUT" class="form" id="editSubscriberForm" @submit.prevent="editSubscriber">
+                        <form :action="'/api/subscribers/' + editableSubscriber.id" method="POST" class="form" id="editSubscriberForm" @submit.prevent="editSubscriber">
                             @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="editableSubscriberId" :value="editableSubscriber.id">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editSubscriberTitle">Edit Subscriber</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"
@@ -287,8 +289,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success" id="editSubscriberButton">
-                                    Create
+                                <button type="submit" class="btn btn-success" :id="'editSubscriberButton' + editableSubscriber.id">
+                                    Edit
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @click.prevent="showModal('')">
                                     Cancel
@@ -308,8 +310,7 @@
                             @csrf
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addFieldTitle">Add New Field</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                    @click.prevent="showModal('')">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click.prevent="showModal('')">
                                     <span aria-hidden="true">
                                         &times;
                                     </span>
@@ -329,8 +330,7 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="type">Field Type</label>
-                                            <select class="form-control" name="type"
-                                                :class="{ 'border-danger' : errors.includes('type') }">
+                                            <select class="form-control" name="type" :class="{ 'border-danger' : errors.includes('type') }">
                                                 <option value="" selected>Field Type</option>
                                                 <option value="date">Date</option>
                                                 <option value="number">Number</option>
@@ -345,8 +345,7 @@
                                 <button type="submit" class="btn btn-success" id="addFieldButton">
                                     Create
                                 </button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                    @click.prevent="showModal('')">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click.prevent="showModal('')">
                                     Cancel
                                 </button>
                             </div>
@@ -354,9 +353,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-backdrop d-none"
-                :class="{ 'show fade d-block' : modal }">
-            </div>
+            <div class="modal-backdrop d-none" :class="{ 'show fade d-block' : modal }"></div>
         </div>
         <script src="{{ mix('js/app.js')}}"></script>
     </body>

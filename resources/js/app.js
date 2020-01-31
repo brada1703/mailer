@@ -69,24 +69,23 @@ const vue = new Vue({
                 this.editableFieldValues = response.data.values;
             })
         },
-        editSubscriber(id) {
-            console.log('edit subscriber ' + id)
-            // e.preventDefault()
-            // let button = document.querySelector('#editSubscriberButton')
-            // button.disabled = true
-            // console.log(e)
-            // axios
-            //     .post(e.target.action, new FormData(e.target))
-            //     .then(response => {
-            //         this.subscribers = response.data.subscribers;
-            //         this.fieldValues = response.data.fieldValues;
-            //         this.showModal('')
-            //     })
-            //     .catch(error => {
-            //         console.log("error: ", error.response)
-            //         button.disabled = false
-            //         this.errors = Object.keys(error.response.data.errors)
-            //     })
+        editSubscriber(e) {
+            e.preventDefault()
+            let id = new FormData(e.target).get('editableSubscriberId')
+            let button = document.querySelector('#editSubscriberButton' + id)
+            button.disabled = true
+            axios
+                .post(e.target.action, new FormData(e.target))
+                .then(response => {
+                    this.subscribers = response.data.subscribers;
+                    this.fieldValues = response.data.fieldValues;
+                    this.showModal('')
+                })
+                .catch(error => {
+                    console.log("error: ", error.response)
+                    this.errors = Object.keys(error.response.data.errors)
+                })
+            button.disabled = false
         },
         deleteSubscriber(e) {
             e.preventDefault()
