@@ -23,6 +23,12 @@ const vue = new Vue({
         axios.get('/api/fieldvalues').then(response => this.fieldValues = response.data)
     },
     methods: {
+        check(e) {
+            let checked = e.target.checked
+            let id = e.target.getAttribute('data')
+            let input = document.getElementById(id)
+            input.value = checked
+        },
         show(tab) {
             this.showTab = tab
         },

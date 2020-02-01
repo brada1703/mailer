@@ -237,6 +237,11 @@
                         <form :action="'/api/subscribers/' + editableSubscriber.id" method="POST" class="form" id="editSubscriberForm" @submit.prevent="editSubscriber">
                             @csrf
                             @method('PATCH')
+                            <template v-for="field in fields">
+                                <input type="hidden" :name="'field_' + field.id" :id="'field_' + field.id" v-if="field.type == 'boolean'"
+                                    :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                        editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : false">
+                            </template>
                             <input type="hidden" name="editableSubscriberId" :value="editableSubscriber.id">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editSubscriberTitle">Edit Subscriber</h5>
@@ -284,10 +289,10 @@
                                                 :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
-                                            <input class="form-control" type="checkbox" value="true" v-if="field.type == 'boolean'"
-                                                :name="'field_' + field.id" :placeholder="field.title"
-                                                :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
-                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
+                                            <input class="form-control" type="checkbox" v-if="field.type == 'boolean'"
+                                                @click="check($event)" :data="'field_' + field.id"
+                                                :checked="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : 'false'">
                                         </div>
                                     </div>
                                     <div class="col-12" v-if="errors.includes('field_id')">

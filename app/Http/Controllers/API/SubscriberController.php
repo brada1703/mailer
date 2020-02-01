@@ -6,12 +6,10 @@ use App\Field;
 use App\FieldValue;
 use App\Http\Controllers\Controller;
 use App\Rules\EmailDomainActive;
-use App\Rules\ExistingFieldId;
 use App\Subscriber;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 
 class SubscriberController extends Controller
 {
@@ -64,7 +62,7 @@ class SubscriberController extends Controller
                     $validation = 'string';
                     break;
                 case 'boolean':
-                    $validation = 'boolean';
+                    $validation = 'in:true,false';
                     break;
                 default:
                     $validation = 'string';
@@ -81,7 +79,7 @@ class SubscriberController extends Controller
                         ])
                         ->validate([
                             'value' => "nullable|$validation",
-                            'field_id' => ['nullable', 'numeric', new ExistingFieldId],
+                            'field_id' => 'nullable',
                             'subscriber_id' => 'nullable',
                             'created_at' => 'nullable',
                         ])
@@ -90,7 +88,6 @@ class SubscriberController extends Controller
                 // Delete already created Subscriber to avoid duplicates if FieldValue fails
                 $subscriber = Subscriber::where('id', $subscriber_id);
                 $subscriber->delete();
-                throw ValidationException::withMessages(['field_id' => 'Field ID: ' . $field_id . ' Does not exist']);
             }
         };
 
@@ -153,7 +150,7 @@ class SubscriberController extends Controller
                     $validation = 'string';
                     break;
                 case 'boolean':
-                    $validation = 'boolean';
+                    $validation = 'in:true,false';
                     break;
                 default:
                     $validation = 'string';
@@ -173,25 +170,21 @@ class SubscriberController extends Controller
                         ])
                 );
             } catch (ModelNotFoundException $e) {
-                try {
-                    FieldValue::create(
-                        request()
-                            ->merge([
-                                'value' => $value,
-                                'field_id' => $field_id,
-                                'subscriber_id' => $subscriber_id,
-                                'created_at' => $now,
-                            ])
-                            ->validate([
-                                'value' => "nullable|$validation",
-                                'field_id' => ['nullable', 'numeric', new ExistingFieldId],
-                                'subscriber_id' => 'nullable',
-                                'created_at' => 'nullable',
-                            ])
-                    );
-                } catch (Exception $e) {
-                    throw ValidationException::withMessages(['field_id' => 'Field ID: ' . $field_id . ' Does not exist']);
-                }
+                FieldValue::create(
+                    request()
+                        ->merge([
+                            'value' => $value,
+                            'field_id' => $field_id,
+                            'subscriber_id' => $subscriber_id,
+                            'created_at' => $now,
+                        ])
+                        ->validate([
+                            'value' => "nullable|$validation",
+                            'field_id' => 'nullable',
+                            'subscriber_id' => 'nullable',
+                            'created_at' => 'nullable',
+                        ])
+                );
             }
         };
 
