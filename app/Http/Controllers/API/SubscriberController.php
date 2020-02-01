@@ -144,7 +144,7 @@ class SubscriberController extends Controller
             switch ($field_type) {
                 case 'date':
                     $validation = 'date';
-                    $value = date('Y-m-d', strtotime($value));
+                    $value = $value ? date('Y-m-d', strtotime($value)) : '';
                     break;
                 case 'number':
                     $validation = 'numeric';
