@@ -273,22 +273,27 @@
                                         <div class="form-group">
                                             <label :for="'field_' + field.id">@{{ field.title }}</label>
                                             <input class="form-control" type="date" value="" v-if="field.type == 'date'"
-                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
                                             <input class="form-control" type="number" value="" v-if="field.type == 'number'"
-                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
                                             <input class="form-control" type="text" value="" v-if="field.type == 'string'"
-                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
                                             <input class="form-control" type="checkbox" value="true" v-if="field.type == 'boolean'"
-                                                :name="'field_' + field.id + '_' + field.type" :placeholder="field.title"
+                                                :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
                                         </div>
+                                    </div>
+                                    <div class="col-12" v-if="errors.includes('field_id')">
+                                        <p class="text-danger text-center">
+                                            A field is no longer valid.<br>Please refresh the browser and try again.
+                                        </p>
                                     </div>
                                 </div>
                             </div>

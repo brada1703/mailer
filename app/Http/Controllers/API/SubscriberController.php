@@ -130,26 +130,16 @@ class SubscriberController extends Controller
 
         $subscriber_id = $subscriber->id;
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Get array of field IDs -> for validation -> within array
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        // Get an array of all of the field inputs
+        // Get all field inputs
         $fields = array_filter($request->all(), function ($key) {
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
-        // Split this into the information that we want
-
-        // REDO THIS AND GET THE DATA TYPE FROM THE DATABASE
-        // NEVER TRUST PEOPLE
-        // $available_fields = Field::all();
-        // loop through to find the IDs in there
-
+        // Split inputs into ID and get Type from DB
         foreach ($fields as $field_info => $value) {
             $field_info = explode('_', $field_info);
             $field_id = $field_info[1];
-            $field_type = $field_info[2];
+            $field_type = Field::where('id', $field_id)->first() ? Field::where('id', $field_id)->pluck('type')[0] : null;
 
             switch ($field_type) {
                 case 'date':
@@ -165,11 +155,12 @@ class SubscriberController extends Controller
                 case 'boolean':
                     $validation = 'boolean';
                     break;
+                default:
+                    $validation = 'string';
             }
 
             try {
                 $fieldValue = FieldValue::where(['subscriber_id' => $subscriber_id, 'field_id' => $field_id])->firstOrFail();
-
                 $fieldValue->update(
                     request()
                         ->merge([
@@ -181,22 +172,26 @@ class SubscriberController extends Controller
                             'updated_at' => 'nullable',
                         ])
                 );
-            } catch (ModelNotFoundException $ex) {
-                FieldValue::create(
-                    request()
-                        ->merge([
-                            'value' => $value,
-                            'field_id' => $field_id,
-                            'subscriber_id' => $subscriber_id,
-                            'created_at' => $now,
-                        ])
-                        ->validate([
-                            'value' => "nullable|$validation",
-                            'field_id' => 'nullable',
-                            'subscriber_id' => 'nullable',
-                            'created_at' => 'nullable',
-                        ])
-                );
+            } catch (ModelNotFoundException $e) {
+                try {
+                    FieldValue::create(
+                        request()
+                            ->merge([
+                                'value' => $value,
+                                'field_id' => $field_id,
+                                'subscriber_id' => $subscriber_id,
+                                'created_at' => $now,
+                            ])
+                            ->validate([
+                                'value' => "nullable|$validation",
+                                'field_id' => ['nullable', 'numeric', new ExistingFieldId],
+                                'subscriber_id' => 'nullable',
+                                'created_at' => 'nullable',
+                            ])
+                    );
+                } catch (Exception $e) {
+                    throw ValidationException::withMessages(['field_id' => 'Field ID: ' . $field_id . ' Does not exist']);
+                }
             }
         };
 
