@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Field;
+use App\FieldValue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -55,7 +56,8 @@ class FieldController extends Controller
         );
 
         return response()->json([
-            'fields' => Field::orderBy('created_at', 'desc')->get()
+            'fields' => Field::orderBy('created_at', 'desc')->get(),
+            'fieldValues' => FieldValue::orderBy('created_at', 'desc')->get()
         ]);
     }
 

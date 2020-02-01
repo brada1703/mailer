@@ -2,9 +2,10 @@
 
 namespace App\Rules;
 
+use App\Field;
 use Illuminate\Contracts\Validation\Rule;
 
-class EmailDomainActive implements Rule
+class ExistingFieldId implements Rule
 {
     /**
      * Create a new rule instance.
@@ -25,10 +26,8 @@ class EmailDomainActive implements Rule
      */
     public function passes($attribute, $value)
     {
-        $email = explode('@', $value);
-        $domain = $email[1];
-
-        return sizeof(dns_get_record($domain)) > 0;
+        $all_field_ids = Field::all()->pluck('id')->toArray();
+        return in_array($value, $all_field_ids);
     }
 
     /**
@@ -38,6 +37,6 @@ class EmailDomainActive implements Rule
      */
     public function message()
     {
-        return 'Invalid email domain name';
+        return 'Invalid Field ID';
     }
 }
