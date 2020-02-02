@@ -9,16 +9,12 @@ use Tests\TestCase;
 
 class FieldTest extends TestCase
 {
-    // Index
-
     /** @test */
     public function a_user_can_see_all_fields()
     {
         $response = $this->get('/api/fields');
         $response->assertStatus(200);
     }
-
-    // Store
 
     /** @test */
     public function a_user_can_create_a_new_field()

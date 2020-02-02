@@ -16,7 +16,7 @@ class CreateFieldsTable extends Migration
         Schema::create('fields', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title', 255);
-            $table->set('type', ['date', 'number', 'string', 'boolean']);
+            $table->enum('type', ['date', 'number', 'string', 'boolean']);
             $table->timestamps();
         });
     }

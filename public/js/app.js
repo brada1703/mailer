@@ -14400,25 +14400,34 @@ var vue = new Vue({
   data: {
     showTab: 'subscribers',
     modal: '',
-    errors: [''],
-    subscribers: [''],
-    fieldValues: [''],
-    fields: ['']
+    errors: [],
+    subscribers: [],
+    fieldValues: [],
+    fields: [],
+    editableSubscriber: [],
+    editableFieldValues: [],
+    editableField: []
   },
   created: function created() {
     var _this = this;
 
-    axios.get('/fields').then(function (response) {
+    axios.get('/api/fields').then(function (response) {
       return _this.fields = response.data;
     });
-    axios.get('/subscribers').then(function (response) {
+    axios.get('/api/subscribers').then(function (response) {
       return _this.subscribers = response.data;
     });
-    axios.get('/fieldvalues').then(function (response) {
+    axios.get('/api/fieldvalues').then(function (response) {
       return _this.fieldValues = response.data;
     });
   },
   methods: {
+    check: function check(e) {
+      var checked = e.target.checked;
+      var id = e.target.getAttribute('data');
+      var input = document.getElementById(id);
+      input.value = checked;
+    },
     show: function show(tab) {
       this.showTab = tab;
     },
@@ -14428,7 +14437,8 @@ var vue = new Vue({
       modal ? body.add('modal-open') : body.remove('modal-open');
     },
     closeModal: function closeModal(target) {
-      outerModal = [document.getElementById('addSubscriber'), document.getElementById('addField')];
+      // Refactor this
+      outerModal = [document.getElementById('addSubscriber'), document.getElementById('editSubscriber'), document.getElementById('addField'), document.getElementById('editField')];
       outerModal.includes(target) ? this.modal = '' : '';
       var body = document.body.classList;
       body.remove('modal-open');
@@ -14444,27 +14454,126 @@ var vue = new Vue({
         _this2.fieldValues = response.data.fieldValues;
 
         _this2.showModal('');
+
+        document.getElementById('subscriberForm').reset();
       })["catch"](function (error) {
         console.log("error: ", error.response);
-        button.disabled = false;
         _this2.errors = Object.keys(error.response.data.errors);
+      })["finally"](function () {
+        button.disabled = false;
       });
     },
-    addField: function addField(e) {
+    loadSubscriber: function loadSubscriber(id) {
       var _this3 = this;
+
+      axios.get('/api/subscribers/' + id).then(function (response) {
+        _this3.editableSubscriber = response.data.subscriber[0];
+        _this3.editableFieldValues = response.data.values;
+      });
+    },
+    editSubscriber: function editSubscriber(e) {
+      var _this4 = this;
+
+      e.preventDefault();
+      var id = new FormData(e.target).get('editableSubscriberId');
+      var button = document.querySelector('#editSubscriberButton' + id);
+      button.disabled = true;
+      axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+        _this4.subscribers = response.data.subscribers;
+        _this4.fieldValues = response.data.fieldValues;
+
+        _this4.showModal('');
+      })["catch"](function (error) {
+        console.log("error: ", error.response);
+        _this4.errors = Object.keys(error.response.data.errors);
+      });
+      button.disabled = false;
+    },
+    deleteSubscriber: function deleteSubscriber(e) {
+      var _this5 = this;
+
+      e.preventDefault();
+      var id = new FormData(e.target).get('subscriber_id');
+      var user = new FormData(e.target).get('subscriber_email');
+      var button = document.querySelector('#deleteSubscriber' + id);
+      button.disabled = true;
+
+      if (confirm('Are you sure you want to delete ' + user + '?')) {
+        axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+          _this5.subscribers = response.data.subscribers;
+          _this5.fieldValues = response.data.fieldValues;
+        })["catch"](function (error) {
+          console.log("error: ", error.response);
+          _this5.errors = Object.keys(error.response.data.errors);
+        })["finally"](function () {
+          button.disabled = false;
+        });
+      }
+    },
+    addField: function addField(e) {
+      var _this6 = this;
 
       e.preventDefault();
       var button = document.querySelector('#addFieldButton');
       button.disabled = true;
       axios.post(e.target.action, new FormData(e.target)).then(function (response) {
-        _this3.fields = response.data.fields;
+        _this6.fields = response.data.fields;
 
-        _this3.showModal('');
+        _this6.showModal('');
+
+        document.getElementById('fieldForm').reset();
       })["catch"](function (error) {
         console.log("error: ", error.response);
         button.disabled = false;
-        _this3.errors = Object.keys(error.response.data.errors);
+        _this6.errors = Object.keys(error.response.data.errors);
+      })["finally"](function () {
+        button.disabled = false;
       });
+    },
+    loadField: function loadField(id) {
+      var _this7 = this;
+
+      axios.get('/api/fields/' + id).then(function (response) {
+        _this7.editableField = response.data.field[0];
+      });
+    },
+    editField: function editField(e) {
+      var _this8 = this;
+
+      e.preventDefault();
+      var id = new FormData(e.target).get('editableFieldId');
+      var button = document.querySelector('#editFieldButton' + id);
+      button.disabled = true;
+      axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+        _this8.fields = response.data.fields;
+        _this8.fieldValues = response.data.fieldValues;
+
+        _this8.showModal('');
+      })["catch"](function (error) {
+        console.log("error: ", error.response);
+        _this8.errors = Object.keys(error.response.data.errors);
+      });
+      button.disabled = false;
+    },
+    deleteField: function deleteField(e) {
+      var _this9 = this;
+
+      e.preventDefault();
+      var id = new FormData(e.target).get('field_id');
+      var title = new FormData(e.target).get('field_title');
+      var button = document.querySelector('#deleteField' + id);
+      button.disabled = true;
+
+      if (confirm('Are you sure you want to delete ' + title + '?')) {
+        axios.post(e.target.action, new FormData(e.target)).then(function (response) {
+          _this9.fields = response.data.fields;
+        })["catch"](function (error) {
+          console.log("error: ", error.response);
+          _this9.errors = Object.keys(error.response.data.errors);
+        });
+      }
+
+      button.disabled = false;
     }
   }
 });
