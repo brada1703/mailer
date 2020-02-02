@@ -13,7 +13,12 @@
     </head>
     <body>
         <div id="app">
-            <p class="text-center title mt-4">Mailer Dashboard</p>
+            <header class="py-4 mb-4">
+                <div class="container d-flex align-items-center">
+                    <img src="dashboard.png" alt="">
+                    <h1 class="text-center m-0">Dashboard</h1>
+                </div>
+            </header>
             <div class="container">
                 <div class="row">
                     <div class="col-12">

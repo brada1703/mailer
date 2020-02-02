@@ -11356,9 +11356,19 @@ a.text-dark:focus {
   }
 }
 
-.title {
-  color: #00A154;
-  font-weight: 700;
+header {
+  background-color: #00A154;
+}
+
+header img {
+  height: 20px;
+  margin-right: 10px;
+}
+
+header h1 {
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .form-group > label {
