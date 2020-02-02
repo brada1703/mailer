@@ -85,7 +85,7 @@ class SubscriberController extends Controller
                         ])
                 );
             } catch (Exception $e) {
-                // Delete already created Subscriber to avoid duplicates if FieldValue fails
+                // If FieldValue fails, delete already created Subscriber to avoid duplicates
                 $subscriber = Subscriber::where('id', $subscriber_id);
                 $subscriber->delete();
             }

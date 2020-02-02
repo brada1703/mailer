@@ -13,15 +13,13 @@ class FieldTest extends TestCase
     /** @test */
     public function a_user_can_see_all_fields()
     {
-        $this->get('/')->assertStatus(200);
+        $this->get('/api/fields')->assertStatus(200);
     }
 
     /** @test */
     public function a_user_can_create_a_new_field()
     {
         // $this->withoutExceptionHandling();
-
-        // $attributes = factory('App\Field')->raw();
 
         $attributes = [
             'created_at' => date('Y-m-d H:i:s'),
