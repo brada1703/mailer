@@ -2,17 +2,20 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FieldTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use RefreshDatabase;
+
+    /** @test */
+    public function a_field_has_a_path()
     {
-        $this->assertTrue(true);
+        $field = factory('App\Field')->create();
+
+        $response = $this->get('/api/fields/' . $field->id);
+
+        $response->assertStatus(200);
     }
 }

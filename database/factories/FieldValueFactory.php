@@ -8,11 +8,10 @@ use App\FieldValue;
 use Faker\Generator as Faker;
 
 $factory->define(FieldValue::class, function (Faker $faker) {
-
     return [
-        'value'         => $faker->word,
-        'field_id'      => Field::all()->random()->id,
+        'value' => $faker->word,
+        'field_id' => Field::all()->random()->id,
         'subscriber_id' => Subscriber::all()->random()->id,
-        'created_at'    => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
+        'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
     ];
 });
