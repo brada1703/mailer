@@ -4,7 +4,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 Vue.config.productionTip = false;
 
-const vue = new Vue({
+new Vue({
     el: '#app',
     data: {
         showTab: 'subscribers',
@@ -110,10 +110,8 @@ const vue = new Vue({
                         console.log("error: ", error.response)
                         this.errors = Object.keys(error.response.data.errors)
                     })
-                    .finally(function () {
-                        button.disabled = false
-                    })
             }
+            button.disabled = false
         },
         addField(e) {
             e.preventDefault()

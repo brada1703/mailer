@@ -14395,7 +14395,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 Vue.config.productionTip = false;
-var vue = new Vue({
+new Vue({
   el: '#app',
   data: {
     showTab: 'subscribers',
@@ -14505,10 +14505,10 @@ var vue = new Vue({
         })["catch"](function (error) {
           console.log("error: ", error.response);
           _this5.errors = Object.keys(error.response.data.errors);
-        })["finally"](function () {
-          button.disabled = false;
         });
       }
+
+      button.disabled = false;
     },
     addField: function addField(e) {
       var _this6 = this;
