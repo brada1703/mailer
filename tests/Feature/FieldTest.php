@@ -2,18 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Field;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class FieldTest extends TestCase
 {
+    use WithFaker, RefreshDatabase;
+
     /** @test */
     public function a_user_can_see_all_fields()
     {
-        $response = $this->get('/api/fields');
-        $response->assertStatus(200);
+        $this->get('/')->assertStatus(200);
     }
 
     /** @test */
@@ -21,68 +21,102 @@ class FieldTest extends TestCase
     {
         // $this->withoutExceptionHandling();
 
-        $response = $this->post('/api/fields', [
-            'created_at' => date('Y-m-d H:i:s'),
-            'title' => 'test',
-            'type' => 'string',
-        ]);
+        // $attributes = factory('App\Field')->raw();
 
-        $response->assertStatus(200);
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => $this->faker->word,
+            'type' => 'string',
+        ];
+
+        $this->post('/api/fields', $attributes);
+
+        $this->assertDatabaseHas('fields', $attributes);
+
+        $this->get('/api/fields')->assertSee($attributes['title']);
+    }
+
+    /** @test */
+    public function a_title_name_must_be_unique()
+    {
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => $this->faker->word,
+            'type' => 'string',
+        ];
+
+        $this->post('/api/fields', $attributes);
+
+        $this->post('/api/fields', $attributes)->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_title_is_required_on_a_new_field()
     {
-        $response = $this->post(
-            '/api/fields',
-            array_merge($this->createData(), ['title' => ''])
-        );
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => '',
+            'type' => 'string',
+        ];
 
-        $response->assertSessionHasErrors('title');
+        $this->post('/api/fields', $attributes)->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_title_must_be_at_least_3_characters_long_on_a_new_field()
     {
-        $response = $this->post(
-            '/api/fields',
-            array_merge($this->createData(), ['title' => 'a'])
-        );
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => 'a',
+            'type' => 'string',
+        ];
 
-        $response->assertSessionHasErrors('title');
+        $this->post('/api/fields', $attributes)->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_type_is_required_on_a_new_field()
     {
-        $response = $this->post(
-            '/api/fields',
-            array_merge($this->createData(), ['type' => ''])
-        );
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => $this->faker->word,
+            'type' => '',
+        ];
 
-        $response->assertSessionHasErrors('type');
+        $this->post('/api/fields', $attributes)->assertSessionHasErrors('type');
     }
 
-    // Test to see if Field type is in:date,number,string,boolean
+    /** @test */
+    public function a_new_field_must_have_a_type_within_date_number_string_boolean()
+    {
+        $attributes = [
+            'created_at' => date('Y-m-d H:i:s'),
+            'title' => $this->faker->word,
+            'type' => $this->faker->randomElement(['date', 'number', 'string', 'boolean']),
+        ];
 
-    // Show
+        $this->post('/api/fields', $attributes);
+
+        $this->assertDatabaseHas('fields', $attributes);
+    }
 
     /** @test */
     public function a_user_can_see_a_single_field()
     {
-        $response = $this->get('/api/fields/1');
-        $response->assertStatus(200);
-    }
+        $field = factory('App\Field')->create();
 
-    // Update
+        $this->get('/api/fields/' . $field->id)->assertSee($field->title);
+    }
 
     /** @test */
     public function a_user_can_edit_a_field()
     {
         $this->withoutExceptionHandling();
 
-        $response = $this->patch('/api/fields/1', [
-            'title' => 'test',
+        $field = factory('App\Field')->create();
+
+        $response = $this->patch('/api/fields/' . $field->id, [
+            'title' => 'edited_' . $this->faker->word,
             'type' => 'string',
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
@@ -93,51 +127,60 @@ class FieldTest extends TestCase
     /** @test */
     public function a_title_is_required_on_an_updated_field()
     {
-        $response = $this->patch('/api/fields/1', array_merge($this->updateData(), ['title' => '']));
+        // $this->withoutExceptionHandling();
+
+        $field = factory('App\Field')->create();
+
+        $response = $this->patch('/api/fields/' . $field->id, [
+            'title' => '',
+            'type' => 'string',
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
         $response->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_title_must_be_at_least_3_characters_long_on_an_updated_field()
     {
-        $response = $this->patch('/api/fields/1', array_merge($this->updateData(), ['title' => 'a']));
+        // $this->withoutExceptionHandling();
+
+        $field = factory('App\Field')->create();
+
+        $response = $this->patch('/api/fields/' . $field->id, [
+            'title' => 'a',
+            'type' => 'string',
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
         $response->assertSessionHasErrors('title');
     }
 
     /** @test */
     public function a_type_is_required_on_an_updated_field()
     {
-        $response = $this->patch('/api/fields/1', array_merge($this->updateData(), ['type' => '']));
+        // $this->withoutExceptionHandling();
+
+        $field = factory('App\Field')->create();
+
+        $response = $this->patch('/api/fields/' . $field->id, [
+            'title' => $this->faker->name,
+            'type' => '',
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
         $response->assertSessionHasErrors('type');
     }
-
-    // Delete
 
     /** @test */
     public function a_user_can_delete_a_field()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
-        $response = $this->delete('/api/fields/1');
+        $field = factory('App\Field')->create();
+
+        $response = $this->delete('/api/fields/' . $field->id);
 
         $response->assertStatus(200);
-    }
-
-    private function createData()
-    {
-        return [
-            'created_at' => date('Y-m-d H:i:s'),
-            'title' => 'test',
-            'type' => 'string',
-        ];
-    }
-
-    private function updateData()
-    {
-        return [
-            'updated_at' => date('Y-m-d H:i:s'),
-            'title' => 'test',
-            'type' => 'string',
-        ];
     }
 }

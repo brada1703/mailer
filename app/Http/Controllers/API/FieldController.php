@@ -22,7 +22,7 @@ class FieldController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ])
                 ->validate([
-                    'title' => 'required|min:3',
+                    'title' => 'required|unique:fields,title|min:3',
                     'type' => 'required|in:date,number,string,boolean',
                     'created_at' => 'required',
                 ])
