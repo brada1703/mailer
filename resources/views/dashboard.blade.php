@@ -5,11 +5,9 @@
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         <link rel="shortcut icon" type="image/png" href="/favicon.png"/>
         <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
-
         <title>Mailer</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
         <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
-
     </head>
     <body>
         <div id="app">
@@ -294,10 +292,15 @@
                                                 :name="'field_' + field.id" :placeholder="field.title"
                                                 :value="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
                                                     editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : ''">
-                                            <input class="form-control" type="checkbox" v-if="field.type == 'boolean'"
-                                                @click="check($event)" :data="'field_' + field.id"
-                                                :checked="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] ?
-                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value : 'false'">
+                                            <template v-if="field.type == 'boolean'">
+                                                <template v-if="editableFieldValues.filter(obj=>obj.field_id == field.id)[0] &&
+                                                    editableFieldValues.filter(obj=>obj.field_id == field.id)[0].value == 'true'">
+                                                    <input class="form-control" type="checkbox" :data="'field_' + field.id" @click="check($event)" checked>
+                                                </template>
+                                                <template v-else>
+                                                    <input class="form-control" type="checkbox" :data="'field_' + field.id" @click="check($event)">
+                                                </template>
+                                            </template>
                                         </div>
                                     </div>
                                     <div class="col-12" v-if="errors.includes('field_id')">
