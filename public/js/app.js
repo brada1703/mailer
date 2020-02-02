@@ -14437,7 +14437,6 @@ new Vue({
       modal ? body.add('modal-open') : body.remove('modal-open');
     },
     closeModal: function closeModal(target) {
-      // Refactor this
       outerModal = [document.getElementById('addSubscriber'), document.getElementById('editSubscriber'), document.getElementById('addField'), document.getElementById('editField')];
       outerModal.includes(target) ? this.modal = '' : '';
       var body = document.body.classList;
@@ -14486,8 +14485,9 @@ new Vue({
       })["catch"](function (error) {
         console.log("error: ", error.response);
         _this4.errors = Object.keys(error.response.data.errors);
+      })["finally"](function () {
+        button.disabled = false;
       });
-      button.disabled = false;
     },
     deleteSubscriber: function deleteSubscriber(e) {
       var _this5 = this;
@@ -14505,10 +14505,12 @@ new Vue({
         })["catch"](function (error) {
           console.log("error: ", error.response);
           _this5.errors = Object.keys(error.response.data.errors);
+        })["finally"](function () {
+          button.disabled = false;
         });
+      } else {
+        button.disabled = false;
       }
-
-      button.disabled = false;
     },
     addField: function addField(e) {
       var _this6 = this;
@@ -14552,8 +14554,9 @@ new Vue({
       })["catch"](function (error) {
         console.log("error: ", error.response);
         _this8.errors = Object.keys(error.response.data.errors);
+      })["finally"](function () {
+        button.disabled = false;
       });
-      button.disabled = false;
     },
     deleteField: function deleteField(e) {
       var _this9 = this;
@@ -14570,10 +14573,12 @@ new Vue({
         })["catch"](function (error) {
           console.log("error: ", error.response);
           _this9.errors = Object.keys(error.response.data.errors);
+        })["finally"](function () {
+          button.disabled = false;
         });
+      } else {
+        button.disabled = false;
       }
-
-      button.disabled = false;
     }
   }
 });

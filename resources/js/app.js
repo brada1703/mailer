@@ -38,7 +38,6 @@ new Vue({
             modal ? body.add('modal-open') : body.remove('modal-open')
         },
         closeModal(target) {
-            // Refactor this
             outerModal = [
                 document.getElementById('addSubscriber'),
                 document.getElementById('editSubscriber'),
@@ -91,7 +90,9 @@ new Vue({
                     console.log("error: ", error.response)
                     this.errors = Object.keys(error.response.data.errors)
                 })
-            button.disabled = false
+                .finally(function () {
+                    button.disabled = false
+                })
         },
         deleteSubscriber(e) {
             e.preventDefault()
@@ -110,8 +111,12 @@ new Vue({
                         console.log("error: ", error.response)
                         this.errors = Object.keys(error.response.data.errors)
                     })
+                    .finally(function () {
+                        button.disabled = false
+                    })
+            } else {
+                button.disabled = false
             }
-            button.disabled = false
         },
         addField(e) {
             e.preventDefault()
@@ -152,7 +157,9 @@ new Vue({
                     console.log("error: ", error.response)
                     this.errors = Object.keys(error.response.data.errors)
                 })
-            button.disabled = false
+                .finally(function () {
+                    button.disabled = false
+                })
         },
         deleteField(e) {
             e.preventDefault()
@@ -170,8 +177,12 @@ new Vue({
                         console.log("error: ", error.response)
                         this.errors = Object.keys(error.response.data.errors)
                     })
+                    .finally(function () {
+                        button.disabled = false
+                    })
+            } else {
+                button.disabled = false
             }
-            button.disabled = false
         },
     },
 });
