@@ -25,9 +25,3 @@ Seed database and serve page:
 * Run the migrations and seed the database: `php artisan migrate:fresh --seed`
 * Serve page: `php artisan serve`
 * Visit page in the browser: "http://127.0.0.1:8000/"
-
-## How to test the project's code
-
-Test Code:
-* Open terminal in the "mailer" folder
-* Run the tests: `phpunit`
