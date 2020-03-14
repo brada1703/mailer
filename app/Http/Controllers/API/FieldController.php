@@ -6,6 +6,7 @@ use App\Field;
 use App\FieldValue;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\FieldRequest;
 
 class FieldController extends Controller
 {
@@ -14,19 +15,9 @@ class FieldController extends Controller
         return response()->json(Field::orderBy('created_at', 'desc')->get());
     }
 
-    public function store(Request $request)
+    public function store(FieldRequest $request)
     {
-        Field::create(
-            request()
-                ->merge([
-                    'created_at' => date('Y-m-d H:i:s'),
-                ])
-                ->validate([
-                    'title' => 'required|unique:fields,title|min:3',
-                    'type' => 'required|in:date,number,string,boolean',
-                    'created_at' => 'required',
-                ])
-        );
+        Field::create($request->validated());
 
         return response()->json([
             'fields' => Field::orderBy('created_at', 'desc')->get()
@@ -39,21 +30,11 @@ class FieldController extends Controller
         return response()->json(['field' => $field]);
     }
 
-    public function update(Request $request, $id)
+    public function update(FieldRequest $request, $id)
     {
         $field = Field::where('id', $id)->firstOrFail();
 
-        $field->update(
-            request()
-                ->merge([
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ])
-                ->validate([
-                    'title' => 'required|min:3',
-                    'type' => 'required|in:date,number,string,boolean',
-                    'updated_at' => 'required',
-                ])
-        );
+        $field->update($request->validated());
 
         return response()->json([
             'fields' => Field::orderBy('created_at', 'desc')->get(),
