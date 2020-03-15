@@ -24,14 +24,13 @@ class SubscriberController extends Controller
     {
         $fields = new FieldService;
         $errors = $fields->validateFields($request);
+
         if ($errors) {
-            // CHANGE THIS
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'change' => ['me'],
-                ],
-            ], 422);
+            $validator = Validator::make($request->all(), []);
+            foreach ($errors as $error) {
+                $validator->getMessageBag()->add($error['field_title'], 'This field is required');
+            }
+            return response()->json($validator->messages(), 422);
         }
 
         $subscriber = Subscriber::create($request->validated());
@@ -48,10 +47,7 @@ class SubscriberController extends Controller
     {
         $subscriber = Subscriber::where('id', $id)->get();
         $values = FieldValue::where('subscriber_id', $id)->get();
-        return response()->json([
-            'subscriber' => $subscriber,
-            'values' => $values
-        ]);
+        return response()->json(['subscriber' => $subscriber, 'values' => $values]);
     }
 
     public function update(Request $request, $id)
@@ -64,14 +60,13 @@ class SubscriberController extends Controller
 
         $fields = new FieldService;
         $errors = $fields->validateFields($request);
+
         if ($errors) {
-            // CHANGE THIS
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'change' => ['me'],
-                ],
-            ], 422);
+            $validator = Validator::make($request->all(), []);
+            foreach ($errors as $error) {
+                $validator->getMessageBag()->add($error['field_title'], 'This field is required');
+            }
+            return response()->json($validator->messages(), 422);
         }
 
         $subscriber = Subscriber::where('id', $id)->firstOrFail();
@@ -99,13 +94,13 @@ class SubscriberController extends Controller
 
 class FieldService
 {
-    public function validateFields($subscriber)
+    public function validateFields($request)
     {
-        $fields = $this->getFields($subscriber);
+        $fields = $this->getFields($request);
         $allFieldsInformation = $this->getValidationType($fields);
         $validateAllFields = $this->validateAllFields($allFieldsInformation);
-        $finalInformation = $this->showValidationErrors($validateAllFields);
-        return $finalInformation;
+        $errors = $this->getValidationErrors($validateAllFields);
+        return $errors;
     }
 
     public function createField($subscriber_id, $request)
@@ -135,9 +130,9 @@ class FieldService
         return true;
     }
 
-    public function getFields($subscriber)
+    public function getFields($request)
     {
-        return array_filter($subscriber->toArray(), function ($key) {
+        return array_filter($request->toArray(), function ($key) {
             return strpos($key, 'field_') === 0;
         }, ARRAY_FILTER_USE_KEY);
     }
@@ -181,11 +176,11 @@ class FieldService
         return $allInformation;
     }
 
-    public function showValidationErrors($allInformation)
+    public function getValidationErrors($validateAllFields)
     {
         $errors = [];
 
-        foreach ($allInformation as $field) {
+        foreach ($validateAllFields as $field) {
             if ($field['valid'] == false) {
                 $errors[] = ['field_title' => $field['field_title']];
             }
