@@ -17,9 +17,7 @@ class FieldController extends Controller
     public function store(FieldRequest $request)
     {
         Field::create($request->validated());
-        return response()->json([
-            'fields' => Field::orderBy('created_at', 'desc')->get()
-        ]);
+        return response()->json(['fields' => Field::orderBy('created_at', 'desc')->get()]);
     }
 
     public function show($id)
@@ -42,8 +40,6 @@ class FieldController extends Controller
     {
         $field = Field::where('id', $id);
         $field->delete();
-        return response()->json([
-            'fields' => Field::orderBy('created_at', 'desc')->get(),
-        ]);
+        return response()->json(['fields' => Field::orderBy('created_at', 'desc')->get()]);
     }
 }

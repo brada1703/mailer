@@ -55,6 +55,7 @@ new Vue({
             axios
                 .post(e.target.action, new FormData(e.target))
                 .then(response => {
+                    console.log('response')
                     this.subscribers = response.data.subscribers;
                     this.fieldValues = response.data.fieldValues;
                     this.showModal('')
