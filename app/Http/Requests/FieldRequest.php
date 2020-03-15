@@ -18,12 +18,4 @@ class FieldRequest extends FormRequest
             'type' => 'required|in:date,number,string,boolean'
         ];
     }
-
-    public function messages()
-    {
-        return [
-            'title.required' => 'Title is required!',
-            'type.required' => 'Type is required!'
-        ];
-    }
 }
